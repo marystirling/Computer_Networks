@@ -94,3 +94,8 @@ $ python3 refrigerator.py -g 10.0.0.1 -s 10.0.0.27
 For h27, type in that terminal:
 $ python3 health_server.py
 
+# Running Assignment 1 on a single VM
+You can also just test the code on a single VM by opening three different bash cells. On each one, navigate to the directory of the three needed python files (refrigerator.py, grocery_server.py, health_server.py. Type one of these commands in each of the three bash shells:
+$ python3 refrigerator.py
+$ python3 grocery_server.py
+$ python3 health_server.py
