@@ -40,7 +40,7 @@ Then, there are three mininet tests that we want to run.
 # Mininet Test 1
 Open a bash shell and type in the following commands to create 3 hosts and 1 switch.
 
-$ sudo mn --topo=single,3 --link=tc, delay=10ms
+$ sudo mn --topo=single,3 --link=tc, delay=10ms \
 
 Then type:
 $ xterm h1 h2 h3
