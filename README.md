@@ -31,6 +31,20 @@ The Psuedo Link Layer is suported by our ZeroMQ messaging layer
 
 The (Pseudo) Physical Layer supports the actual communication. This can be intra-host using localhost, or mininet, or Docker Swarm/Kubernetes cluster or actual distributed hosts
 
+# Flatbuffer compiler
+
+Before setting the serialization type to flatbuffer, you have to compile the three .fbs files on your machine (grocery_order.fbs, health_status.fbs, response_messages.fbs)
+
+Make sure that flatbuffer is correctly installed on machine, then run the following code in the terminal:
+
+$ flatc --python grocery_order.fbs
+
+$ flatc --python health_status.fbs
+
+$ flatc --response_messages.fbs
+
+This will compile the schemas and create a namespace for the flatbuffer code in a directory called proto. There are subdirectories for each schema protocols within it.
+
 
 # How to run Assignment 1 in mininet:
 Define what serialization you want to use in config.ini as either json or fbufs.
