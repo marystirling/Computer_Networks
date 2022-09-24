@@ -1,7 +1,7 @@
 # Computer_Networks
 # Assignment 1
 
-################################################################################################
+
 
 Skeleton code and part of README provided by Professor Andy Gokhale at Vanderbilt University.
 
@@ -35,9 +35,62 @@ The (Pseudo) Physical Layer supports the actual communication. This can be intra
 # How to run Assignment 1 in mininet:
 Define what serialization you want to use in config.ini as either json or fbufs.
 
-Then, there are three mininet tests that we want to run. Open a bash shell and type in the following commands
+Then, there are three mininet tests that we want to run. 
+
+# Mininet Test 1
+Open a bash shell and type in the following commands to create 3 hosts and 1 switch.
 
 $ sudo mn --topo=single,3 --link=tc, delay=10ms
+$ xterm h1 h2 h3
 
+You want to deploy refrigerator client on h1, grocery server on h2, and health server on h3.
 
-#################################################################################################
+On each xterm window that pops up, navigate to the directory where these files are located on system.
+
+For h1, type in that terminal:
+$ python3 refrigerator.py -g 10.0.0.2 -s 10.0.0.3
+
+For h2, type in that terminal:
+$ python3 grocery_server.py
+
+For h3, type in that terminal:
+$ python3 health_server.py
+
+# Mininet Test 2
+Open a bash shell and type in the following commands to create 3 hosts and 3 switches
+
+$ sudo mn --topo=linear,3 --link=tc, delay=10ms
+$ xterm h1 h2 h3
+
+You want to deploy refrigerator client on h1, grocery server on h2, and health server on h3.
+
+On each xterm window that pops up, navigate to the directory where these files are located on system.
+
+For h1, type in that terminal:
+$ python3 refrigerator.py -g 10.0.0.2 -s 10.0.0.3
+
+For h2, type in that terminal:
+$ python3 grocery_server.py
+
+For h3, type in that terminal:
+$ python3 health_server.py
+
+# Mininet Test 3
+Open a bash shell and type in the following commands to create 27 hosts and 13 switches
+
+$ sudo mn --topo=tree,depth=3,fanout=3 --link=tc,delay=10ms
+$ xterm h1 h12 h27
+
+You want to deploy refrigerator client on h12, grocery server on h1, and health server on h27 (or any other middle leaves).
+
+On each xterm window that pops up, navigate to the directory where these files are located on system.
+
+For h1, type in that terminal:
+$ python3 grocery_server.py
+
+For h12, type in that terminal:
+$ python3 refrigerator.py -g 10.0.0.1 -s 10.0.0.27
+
+For h27, type in that terminal:
+$ python3 health_server.py
+
