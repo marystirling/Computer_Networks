@@ -318,8 +318,4 @@ def deserialize_from_frames (recvd_seq):
   # custom message
   return cm
 
-def get_message_type():
-    global message_key
-    print(message_key)
-    return message_key
 

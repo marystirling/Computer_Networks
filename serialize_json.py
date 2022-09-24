@@ -130,7 +130,3 @@ def deserialize_r (buf):
   cm_r.contents = json_buff["contents"]
 
   return cm_r
-
-
-def get_message_type(buf):
-    return json.loads(buf)["type"]

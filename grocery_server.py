@@ -22,6 +22,7 @@ import argparse # for argument parsing
 import configparser # for configuration parsing
 import zmq # actually not needed here but we are printing zmq version and hence needed
 import random
+import json
 # add to the python system path so that the following packages can be found
 # relative to this directory
 sys.path.insert (0, os.getcwd ())
@@ -118,7 +119,7 @@ class GroceryOrder ():
         #resp.contents = resp.msg["contents"] = "Bad Request"
         if (self.ser_type == "json"):
             print("json")
-            if (sz_json.get_message_type(request) == 1):
+            if (json.loads(request)["type"] == 1):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "Order Placed"
             else:
@@ -126,9 +127,13 @@ class GroceryOrder ():
                 resp.contents = resp.msg["contents"] = "Bad Request"
         elif (self.ser_type == "fbufs"):
             print("fbufs")
-            resp.code = resp.msg["code"] = 1
-            resp.contents = resp.msg["contents"] = "Bad Request"
-        
+            try:
+                packet = health_message.Message.GetRootAs (request, 0)
+                resp.code = resp.msg["code"] = 0
+                resp.contents = resp.msg["contents"] = "Order Placed"
+            except:
+                resp.code = resp.msg["code"] = 0
+                resp.contents = resp.msg["contents"] = "Order Placed"        
         #if
         #if(sz_json.get_message_type(request) == 1):
             #sz_json.deserialize_o(request)
