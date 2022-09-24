@@ -41,7 +41,7 @@ $ flatc --python grocery_order.fbs
 
 $ flatc --python health_status.fbs
 
-$ flatc --response_messages.fbs
+$ flatc --python response_messages.fbs
 
 This will compile the schemas and create a namespace for the flatbuffer code in a directory called proto. There are subdirectories for each schema protocols within it.
 
