@@ -41,6 +41,8 @@ Then, there are three mininet tests that we want to run.
 Open a bash shell and type in the following commands to create 3 hosts and 1 switch.
 
 $ sudo mn --topo=single,3 --link=tc, delay=10ms
+
+Then type:
 $ xterm h1 h2 h3
 
 You want to deploy refrigerator client on h1, grocery server on h2, and health server on h3.
@@ -60,6 +62,8 @@ $ python3 health_server.py
 Open a bash shell and type in the following commands to create 3 hosts and 3 switches
 
 $ sudo mn --topo=linear,3 --link=tc, delay=10ms
+
+Then type:
 $ xterm h1 h2 h3
 
 You want to deploy refrigerator client on h1, grocery server on h2, and health server on h3.
@@ -79,6 +83,8 @@ $ python3 health_server.py
 Open a bash shell and type in the following commands to create 27 hosts and 13 switches
 
 $ sudo mn --topo=tree,depth=3,fanout=3 --link=tc,delay=10ms
+
+Then type:
 $ xterm h1 h12 h27
 
 You want to deploy refrigerator client on h12, grocery server on h1, and health server on h27 (or any other middle leaves).
@@ -96,6 +102,11 @@ $ python3 health_server.py
 
 # Running Assignment 1 on a single VM
 You can also just test the code on a single VM by opening three different bash cells. On each one, navigate to the directory of the three needed python files (refrigerator.py, grocery_server.py, health_server.py. Type one of these commands in each of the three bash shells:
+bash shell 1:
 $ python3 refrigerator.py
+
+bash shell 2:
 $ python3 grocery_server.py
+
+bash shell 3:
 $ python3 health_server.py
