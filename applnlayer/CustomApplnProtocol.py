@@ -99,45 +99,21 @@ class CustomApplnProtocol ():
   ##################################
   def send_grocery_order (self, order):
     try:
-      # @TODO@ Implement this
-      # Essentially, you will need to take the Grocery Order supplied in native host
-      # format and invoke the serialization method (either json or flatbuf)
 
-      # You must first check that the message type is grocery order else raise the
-      # BadMessageType exception
-      #
-      # Note, here we are sending some dummy field just for testing purposes
-      # but remove it with the correct payload and length.
       if order.msg["type"] == 1:
           if self.ser_type == SerializationType.JSON:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_json.serialize_o (order)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
+
+              buf = sz_json.serialize (order)
               
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_o = sz_json.deserialize_o (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-             
               order.__str__()
               
               
           elif self.ser_type == SerializationType.FBUFS:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_fb.serialize_o (order)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
-              
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_o = sz_fb.deserialize_o (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-             
+
+              buf = sz_fb.serialize (order)
+
               order.__str__()
       else:
           raise BadMessageType
@@ -153,47 +129,21 @@ class CustomApplnProtocol ():
   ##################################
   def send_health_status (self, status):
     try:
-      # @TODO@ Implement this
-      # Essentially, you will need to take the Health Status supplied in native host
-      # format and invoke the serialization method (either json or flatbuf)
-
-      # You must first check that the message type is health status else raise the
-      # BadMessageType exception
-      #
-      # Note, here we are sending some dummy field just for testing purposes
-      # but remove it with the correct payload and length.
-      
       
       if status.msg["type"] == 2:
           print(self.ser_type)
           if self.ser_type == SerializationType.JSON:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_json.serialize_h (status)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
-              
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_h = sz_json.deserialize_h (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-             
+
+              buf = sz_json.serialize (status)
+
               status.__str__()
               
           elif self.ser_type == SerializationType.FBUFS:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_fb.serialize_h (status)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
-              
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_h = sz_fb.deserialize_h (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-              
+
+              buf = sz_fb.serialize (status)
+
               status.__str__()
               
       else:
@@ -209,7 +159,6 @@ class CustomApplnProtocol ():
   #  send response
   ##################################
   def send_response (self, response):
-
     try:
       # @TODO@ Implement this
       # Essentially, you will need to take the Health Status supplied in native host
@@ -224,32 +173,16 @@ class CustomApplnProtocol ():
       if response.msg["type"] == 3:
           if self.ser_type == SerializationType.JSON:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_json.serialize_r (response)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
-              
-              
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_r = sz_json.deserialize_r (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-             
+
+              buf = sz_json.serialize (response)
+
               response.__str__()
               
           elif self.ser_type == SerializationType.FBUFS:
               print ("serialize the message")
-              #start_time = time.time ()
-              buf = sz_fb.serialize_r (response)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
-              
-              print ("deserialize the message")
-              #start_time = time.time ()
-              cm_r = sz_fb.deserialize_r (buf)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
+
+              buf = sz_fb.serialize (response)
+
              
               response.__str__()
               
@@ -257,7 +190,7 @@ class CustomApplnProtocol ():
           raise BadMessageType
       
       
-      print ("CustomApplnProtocol::send_response")
+      #print ("CustomApplnProtocol::send_response")
       self.xport_obj.send_appln_msg (buf, len (buf))
     except Exception as e:
       raise e
@@ -306,24 +239,15 @@ class CustomApplnProtocol ():
       
       if self.ser_type == SerializationType.JSON:
               print ("deserialize the message")
-              #start_time = time.time ()
-              response_msg = sz_json.deserialize_r (response)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
-             
+
+              response_msg = sz_json.deserialize (response)
+ 
               response.__str__()
               
       elif self.ser_type == SerializationType.FBUFS:
-              #print ("serialize the message")
-              #start_time = time.time ()
-              #buf = sz_fb.serialize_r (response)
-              #end_time = time.time ()
-              #print ("Serialization took {} secs".format (end_time-start_time))
+              
               print ("deserialize the message")
-              #start_time = time.time ()
-              response_msg = sz_fb.deserialize_r (response)
-              #end_time = time.time ()
-              #print ("Deserialization took {} secs".format (end_time-start_time))
+              response_msg = sz_fb.deserialize(response)
               
               response.__str__()
              
