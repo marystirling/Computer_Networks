@@ -88,16 +88,9 @@ class HealthStatus ():
   def gen_response_msg (self):
     '''Response message generator '''
 
-    # @TODO@ Add code here.
-    #
-    # Basically, a response msg is very simple. Set the message type and message
     
     resp_msg = ResponseMessage ()
-    
-    
 
-    # fill up the fields in whatever way you want
-    #resp_msg.type = resp_msg.msg["type"] = 3
 
     return resp_msg
   
@@ -105,14 +98,10 @@ class HealthStatus ():
   # Driver program
   ##################################
   def driver (self):
+    print("in health_server driver")
     try:
       # The health status server will run forever
       while True:
-        # receive a request. If we do not understand it, send a BadRequest response
-        # else send a valid response
-        # @TODO
-        # For now we send a dummy response
-        
 
         request = self.health_obj.recv_request ()
         print ("Received request: {}".format (request))
@@ -120,28 +109,28 @@ class HealthStatus ():
         resp = self.gen_response_msg()
         
         resp.type = resp.msg["type"] = 3
-        #print(refrigerator.flag)
-        #print(global_.flag)
-        #resp.code = resp.msg["code"] = 1
-        #resp.contents = resp.msg["contents"] = "Bad Request"
+
         if (self.ser_type == "json"):
-            print("json")
-            if (json.loads(request)["type"] == 2):
+            print ("deserialize the message")
+            msg_d = sz_json.deserialize (request)
+            #msg_d.__str__()
+            if (msg_d.type == 2):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "You are Healthy"
             else:
                 resp.code = resp.msg["code"] = 1
                 resp.contents = resp.msg["contents"] = "Bad Request"
         elif (self.ser_type == "fbufs"):
-            print("fbufs")
-            try:
-                packet = health_message.Message.GetRootAs (request, 0)
+            print ("deserialize the message")
+            msg_d = sz_fb.deserialize (request)
+            msg_d.__str__()
+            if (msg_d.type == 2):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "You are Healthy"
-            except:
-                resp.code = resp.msg["code"] = 0
-                resp.contents = resp.msg["contents"] = "You are Healthy"
-            
+            else:
+                resp.code = resp.msg["code"] = 1
+                resp.contents = resp.msg["contents"] = "Bad Request"
+
         
         self.health_obj.send_response (resp)
         
@@ -188,18 +177,9 @@ def main ():
     print ("HealthStatus main: invoke driver")
     hs.driver ()
 
-    # we are done. collect results and do the plotting etc.
-    #
-    # @TODO@ Add code here.
+
   except Exception as e:
     print ("Exception caught in main - {}".format (e))
-    exception_type, exception_object, exception_traceback = sys.exc_info()
-    filename = exception_traceback.tb_frame.f_code.co_filename
-    line_number = exception_traceback.tb_lineno
-
-    print("Exception type: ", exception_type)
-    print("File name: ", filename)
-    print("Line number: ", line_number)
     return
 
 #----------------------------------------------

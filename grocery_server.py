@@ -79,17 +79,8 @@ class GroceryOrder ():
   def gen_response_msg (self):
     '''Response message generator '''
 
-    # @TODO@ Add code here.
-    #
-    # Basically, a response msg is very simple. Set the message type and message
-    
     resp_msg = ResponseMessage ()
-    # fill up the fields in whatever way you want
-    #resp_msg.code = resp_msg.msg["code"] = random.randint(0,1)
-    #resp_msg.contents = resp_msg.msg["contents"] = "Order placed!"
-    
-    
-    
+
     return resp_msg
   
   ##################################
@@ -99,10 +90,7 @@ class GroceryOrder ():
     try:
       # The health status server will run forever
       while True:
-        # receive a request. If we do not understand it, send a BadRequest response
-        # else send a valid response
-        # @TODO
-        # For now we send a dummy response
+
         request = self.grocery_obj.recv_request ()
         print ("Received request: {}".format (request))
         
@@ -111,37 +99,27 @@ class GroceryOrder ():
         resp = self.gen_response_msg ()
         
         resp.type = resp.msg["type"] = 3
-        #resp.code = resp.msg["code"] = 1
-        #resp.contents = resp.msg["contents"] = "Bad Request"
-        
-        #resp.type = resp.msg["type"] = 3
-        #resp.code = resp.msg["code"] = 1
-        #resp.contents = resp.msg["contents"] = "Bad Request"
+
         if (self.ser_type == "json"):
-            print("json")
-            if (json.loads(request)["type"] == 1):
+            print ("deserialize the message")
+            msg_d = sz_json.deserialize (request)
+            #msg_d.__str__()
+            if (msg_d.type == 1):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "Order Placed"
             else:
                 resp.code = resp.msg["code"] = 1
                 resp.contents = resp.msg["contents"] = "Bad Request"
         elif (self.ser_type == "fbufs"):
-            print("fbufs")
-            try:
-                packet = health_message.Message.GetRootAs (request, 0)
+            print ("deserialize the message")
+            msg_d = sz_fb.deserialize (request)
+            msg_d.__str__()
+            if (msg_d.type == 1):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "Order Placed"
-            except:
-                resp.code = resp.msg["code"] = 0
-                resp.contents = resp.msg["contents"] = "Order Placed"        
-        #if
-        #if(sz_json.get_message_type(request) == 1):
-            #sz_json.deserialize_o(request)
-        #    resp.code = resp.msg["code"] = 0
-        #    resp.contents = resp.msg["contents"] = "Order Placed"
-        #else:
-        #    resp.code = resp.msg["code"] = 1
-        #    resp.contents = resp.msg["contents"] = "Bad Request"
+            else:
+                resp.code = resp.msg["code"] = 1
+                resp.contents = resp.msg["contents"] = "Bad Request"
 
         self.grocery_obj.send_response (resp)
         
