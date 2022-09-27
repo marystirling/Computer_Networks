@@ -46,193 +46,139 @@ import proto.response_proto.Code_Type as code_type
 
 
 
-message_key = 0
+def serialize(cm):
+    msg_type = cm.type
+    if (msg_type == 1):
+        builder = flatbuffers.Builder (512);
 
-class key:
-    #def __init__(self, x):
-    #    self.__x = x
-    def get_x(self):
-        return self.__x
-    def set_x(self, x):
-        print("did we ever make it here")
-        self.__x = x
+        contents.StartMilkVector(builder, len(cm.msg["contents"]["milk"]))
+        for item in reversed(cm.msg["contents"]["milk"]):
+            milk_order.CreateMilk_Order(builder, item[0], item[1])
+        milkVec = builder.EndVector() 
+        
+        contents.StartBreadVector(builder, len(cm.msg["contents"]["bread"]))
+        for item in reversed(cm.msg["contents"]["bread"]):
+            bread_order.CreateBread_Order(builder, item[0], item[1])
+        breadVec = builder.EndVector()
+        
+        contents.StartMeatVector(builder, len(cm.msg["contents"]["meat"]))
+        for item in reversed(cm.msg["contents"]["meat"]):
+            meat_order.CreateMeat_Order(builder, item[0], item[1])
+        meatVec = builder.EndVector()
+        
+        cans.CreateCans(builder, cm.msg["contents"]["drinks"]["cans"]["coke"],
+                                 cm.msg["contents"]["drinks"]["cans"]["beer"],
+                                 cm.msg["contents"]["drinks"]["cans"]["rootbeer"])
+        
+        bottles.CreateBottles(builder, cm.msg["contents"]["drinks"]["bottles"]["sprite"],
+                                       cm.msg["contents"]["drinks"]["bottles"]["gingerale"],
+                                       cm.msg["contents"]["drinks"]["bottles"]["lemonade"])
+        
+        contents.Start(builder)
+        contents.AddVeggies(builder, veggies.CreateVeggies(builder,
+                                        cm.msg["contents"]["veggies"]["tomato"],
+                                        cm.msg["contents"]["veggies"]["cucumber"],
+                                        cm.msg["contents"]["veggies"]["carrot"],
+                                        cm.msg["contents"]["veggies"]["corn"]))
+        contents.AddDrinks (builder, drinks.CreateDrinks(builder,
+                                        cm.msg["contents"]["drinks"]["cans"]["coke"],
+                                        cm.msg["contents"]["drinks"]["cans"]["beer"],
+                                        cm.msg["contents"]["drinks"]["cans"]["rootbeer"],
+                                        cm.msg["contents"]["drinks"]["bottles"]["sprite"],
+                                        cm.msg["contents"]["drinks"]["bottles"]["gingerale"],
+                                        cm.msg["contents"]["drinks"]["bottles"]["lemonade"]))
+        contents.AddMilk(builder, milkVec)
+        contents.AddBread(builder, breadVec)
+        contents.AddMeat(builder, meatVec)
+        
+        final_contents = contents.End(builder)
+        
+        grocery_order.Start(builder)
+        
+        grocery_order.AddType(builder, cm.msg["type"])
+        grocery_order.AddContents(builder, final_contents)
+        
+        #grocery_order.End(builder)
+        
+        serialized_msg = grocery_order.End (builder)  # get the topic of all these fields
 
-# This is the method we will invoke from our driver program
-# Note that if you have have multiple different message types, we could have
-# separate such serialize/deserialize methods, or a single method can check what
-# type of message it is and accordingly take actions.
-def serialize_o (cm):
-    # first obtain the builder object that is used to create an in-memory representation
-    # of the serialized object from the custom message
-    #global message_key
-    
-    #message_key = 1
-    key_type = key()
-    key_type.set_x(1)
-    
-    
-    builder = flatbuffers.Builder (512);
-    
-    #grocery_order.Start(builder)
-    
-    
-    
-    contents.StartMilkVector(builder, len(cm.msg["contents"]["milk"]))
-    for item in reversed(cm.msg["contents"]["milk"]):
-        milk_order.CreateMilk_Order(builder, item[0], item[1])
-    milkVec = builder.EndVector() 
-    
-    contents.StartBreadVector(builder, len(cm.msg["contents"]["bread"]))
-    for item in reversed(cm.msg["contents"]["bread"]):
-        bread_order.CreateBread_Order(builder, item[0], item[1])
-    breadVec = builder.EndVector()
-    
-    contents.StartMeatVector(builder, len(cm.msg["contents"]["meat"]))
-    for item in reversed(cm.msg["contents"]["meat"]):
-        meat_order.CreateMeat_Order(builder, item[0], item[1])
-    meatVec = builder.EndVector()
-    
-    cans.CreateCans(builder, cm.msg["contents"]["drinks"]["cans"]["coke"],
-                             cm.msg["contents"]["drinks"]["cans"]["beer"],
-                             cm.msg["contents"]["drinks"]["cans"]["rootbeer"])
-    
-    bottles.CreateBottles(builder, cm.msg["contents"]["drinks"]["bottles"]["sprite"],
-                                   cm.msg["contents"]["drinks"]["bottles"]["gingerale"],
-                                   cm.msg["contents"]["drinks"]["bottles"]["lemonade"])
-    
-    contents.Start(builder)
-    contents.AddVeggies(builder, veggies.CreateVeggies(builder,
-                                    cm.msg["contents"]["veggies"]["tomato"],
-                                    cm.msg["contents"]["veggies"]["cucumber"],
-                                    cm.msg["contents"]["veggies"]["carrot"],
-                                    cm.msg["contents"]["veggies"]["corn"]))
+        # end the serialization process
+        builder.Finish (serialized_msg)
 
-    contents.AddDrinks (builder, drinks.CreateDrinks(builder,
-                                    cm.msg["contents"]["drinks"]["cans"]["coke"],
-                                    cm.msg["contents"]["drinks"]["cans"]["beer"],
-                                    cm.msg["contents"]["drinks"]["cans"]["rootbeer"],
-                                    cm.msg["contents"]["drinks"]["bottles"]["sprite"],
-                                    cm.msg["contents"]["drinks"]["bottles"]["gingerale"],
-                                    cm.msg["contents"]["drinks"]["bottles"]["lemonade"]))
-    
-    contents.AddMilk(builder, milkVec)
-    contents.AddBread(builder, breadVec)
-    contents.AddMeat(builder, meatVec)
-    
-    
-    final_contents = contents.End(builder)
-    #print(final_contents)
-
-    grocery_order.Start(builder)
-    
-    grocery_order.AddType(builder, cm.msg["type"])
-    grocery_order.AddContents(builder, final_contents)
-    
-    #grocery_order.End(builder)
-    
-    serialized_msg = grocery_order.End (builder)  # get the topic of all these fields
-
-    # end the serialization process
-    builder.Finish (serialized_msg)
-
-    # get the serialized buffer
-    buf = builder.Output ()
-
-    # return this serialized buffer to the caller
-    return buf
-
-def serialize_h (cm_h):
-    
-    global message_key
-    message_key = 2
-    # first obtain the builder object that is used to create an in-memory representation
-    # of the serialized object from the custom message
-    builder = flatbuffers.Builder (0);
+        # get the serialized buffer
+        buf = builder.Output ()
+        
+    elif (msg_type == 2):
+        builder = flatbuffers.Builder (0);
 
    
-    health_message.Start (builder)  # serialization starts with the "Start" method
-    
-    if cm_h.msg["contents"]["dispenser"] == 0:
-        dispenser = dispenser_status.Dispenser_Status().OPTIMAL
-    elif cm_h.msg["contents"]["dispenser"] == 1:
-        dispenser = dispenser_status.Dispenser_Status().PARTIAL
-    else:
-        dispenser = dispenser_status.Dispenser_Status().BLOCKAGE
-    
-    icemaker = cm_h.msg["contents"]["icemaker"]
-    
-    if cm_h.msg["contents"]["lightbulb"] == 0:
-        lightbulb = status.Status().GOOD
-    else:
-        lightbulb = status.Status().BAD
-    
-    fridge_temp = cm_h.msg["contents"]["fridge_temp"]
-    freezer_temp = cm_h.msg["contents"]["freezer_temp"]
-    
-    if cm_h.msg["contents"]["sensor_status"] == 0:
-        sensor = status.Status().GOOD
-    else:
-        sensor = status.Status().BAD
-    
-    capacity_full = cm_h.msg["contents"]["capacity_full"]
-    
-    
-    final_hcontents = hcontents.CreateContents(builder, dispenser, icemaker, lightbulb, fridge_temp, freezer_temp, sensor, capacity_full)
-    
-    health_message.AddContents(builder, final_hcontents)
-    health_message.AddType(builder, cm_h.msg["type"])
-    
-    serialized_msg = health_message.End (builder)  # get the topic of all these fields
+        health_message.Start (builder)  # serialization starts with the "Start" method
+        
+        if cm.msg["contents"]["dispenser"] == 0:
+            dispenser = dispenser_status.Dispenser_Status().OPTIMAL
+        elif cm.msg["contents"]["dispenser"] == 1:
+            dispenser = dispenser_status.Dispenser_Status().PARTIAL
+        else:
+            dispenser = dispenser_status.Dispenser_Status().BLOCKAGE
+        
+        icemaker = cm.msg["contents"]["icemaker"]
+        
+        if cm.msg["contents"]["lightbulb"] == 0:
+            lightbulb = status.Status().GOOD
+        else:
+            lightbulb = status.Status().BAD
+        
+        fridge_temp = cm.msg["contents"]["fridge_temp"]
+        freezer_temp = cm.msg["contents"]["freezer_temp"]
+        
+        if cm.msg["contents"]["sensor_status"] == 0:
+            sensor = status.Status().GOOD
+        else:
+            sensor = status.Status().BAD
+        
+        capacity_full = cm.msg["contents"]["capacity_full"]
+        
+        
+        final_hcontents = hcontents.CreateContents(builder, dispenser, icemaker, lightbulb, fridge_temp, freezer_temp, sensor, capacity_full)
+        
+        health_message.AddContents(builder, final_hcontents)
+        health_message.AddType(builder, cm.msg["type"])
+        
+        serialized_msg = health_message.End (builder)  # get the topic of all these fields
 
-    # end the serialization process
-    builder.Finish (serialized_msg)
+        # end the serialization process
+        builder.Finish (serialized_msg)
 
-    # get the serialized buffer
-    buf = builder.Output ()
+        # get the serialized buffer
+        buf = builder.Output ()
+    elif (msg_type == 3):
+        builder = flatbuffers.Builder (0);
+        
+        content_field = builder.CreateString(cm.msg["contents"])
+        
+        response_message.Start (builder)  # serialization starts with the "Start" method
+        
+        if cm.msg["code"] == 0:
+            code = code_type.Code_Type().OK
+        else:
+            code = code_type.Code_Type().BAD_REQUEST
+        
+        
+        response_message.AddCode(builder, code)
+        #response_message.AddCode(builder, cm_r.msg["code"])
+        response_message.AddType(builder, cm.msg["type"])
+        response_message.AddContents(builder, content_field)
+        
+        serialized_msg = response_message.End (builder)  # get the topic of all these fields
 
-    # return this serialized buffer to the caller
+        # end the serialization process
+        builder.Finish (serialized_msg)
+
+        # get the serialized buffer
+        buf = builder.Output ()
     return buf
+            
 
-def serialize_r (cm_r):
-    
-    global message_key
-    message_key = 3
-    
-    # first obtain the builder object that is used to create an in-memory representation
-    # of the serialized object from the custom message
-    builder = flatbuffers.Builder (0);
-
-   
-    
-    content_field = builder.CreateString(cm_r.msg["contents"])
-    
-    response_message.Start (builder)  # serialization starts with the "Start" method
-    
-    
-    if cm_r.msg["code"] == 0:
-        code = code_type.Code_Type().OK
-    else:
-        code = code_type.Code_Type().BAD_REQUEST
-    
-    
-    response_message.AddCode(builder, code)
-    #response_message.AddCode(builder, cm_r.msg["code"])
-    response_message.AddType(builder, cm_r.msg["type"])
-    response_message.AddContents(builder, content_field)
-    #response_message.AddContents(builder, cm_r.msg["contents"])
-    
-    
-    serialized_msg = response_message.End (builder)  # get the topic of all these fields
-
-    # end the serialization process
-    builder.Finish (serialized_msg)
-
-
-    # get the serialized buffer
-    buf = builder.Output ()
-    print("did i finish here")
-    # return this serialized buffer to the caller
-    return buf
 
 # serialize the custom message to iterable frame objects needed by zmq
 def serialize_to_frames (cm):
@@ -244,63 +190,58 @@ def serialize_to_frames (cm):
   return [serialize (cm)]
   
   
-# deserialize the incoming serialized structure into native data type
-def deserialize_o (buf):
-    cm = GroceryOrderMessage ()
-    
-    packet = grocery_order.Grocery_Order.GetRootAs (buf, 0)
-    
-    cm.type = packet.Type()
-    cm.tomato = packet.Contents().Veggies().Tomato()
-    cm.cucumber = packet.Contents().Veggies().Cucumber()
-    cm.carrot = packet.Contents().Veggies().Carrot()
-    cm.corn = packet.Contents().Veggies().Corn()
-    
-    can = cans.Cans()
-    bottle = bottles.Bottles()
-    
-    cm.coke = packet.Contents().Drinks().Cans(can).Coke()
-    cm.beer = packet.Contents().Drinks().Cans(can).Beer()
-    cm.rootbeer = packet.Contents().Drinks().Cans(can).Rootbeer()
-    cm.sprite = packet.Contents().Drinks().Bottles(bottle).Sprite()
-    cm.gingerale = packet.Contents().Drinks().Bottles(bottle).Gingerale()
-    cm.lemonade = packet.Contents().Drinks().Bottles(bottle).Lemonade()
-    
-    cm.milk = [(packet.Contents().Milk(j).Type(), packet.Contents().Milk(j).Quantity()) for j in range (packet.Contents().MilkLength ())]
-    cm.bread = [(packet.Contents().Bread(j).Type(), packet.Contents().Bread(j).Quantity()) for j in range (packet.Contents().BreadLength ())]
-    cm.meat = [(packet.Contents().Meat(j).Type(), packet.Contents().Meat(j).Quantity()) for j in range (packet.Contents().MeatLength ())]
 
+def deserialize (buf):
+    packet = grocery_order.Grocery_Order.GetRootAs (buf, 0)
+    msg_type = packet.Type()
+    if (msg_type == 1):
+        cm = GroceryOrderMessage ()
+
+        cm.type = packet.Type()
+        cm.tomato = packet.Contents().Veggies().Tomato()
+        cm.cucumber = packet.Contents().Veggies().Cucumber()
+        cm.carrot = packet.Contents().Veggies().Carrot()
+        cm.corn = packet.Contents().Veggies().Corn()
+        
+        can = cans.Cans()
+        bottle = bottles.Bottles()
+        
+        cm.coke = packet.Contents().Drinks().Cans(can).Coke()
+        cm.beer = packet.Contents().Drinks().Cans(can).Beer()
+        cm.rootbeer = packet.Contents().Drinks().Cans(can).Rootbeer()
+        cm.sprite = packet.Contents().Drinks().Bottles(bottle).Sprite()
+        cm.gingerale = packet.Contents().Drinks().Bottles(bottle).Gingerale()
+        cm.lemonade = packet.Contents().Drinks().Bottles(bottle).Lemonade()
+        
+        cm.milk = [(packet.Contents().Milk(j).Type(), packet.Contents().Milk(j).Quantity()) for j in range (packet.Contents().MilkLength ())]
+        cm.bread = [(packet.Contents().Bread(j).Type(), packet.Contents().Bread(j).Quantity()) for j in range (packet.Contents().BreadLength ())]
+        cm.meat = [(packet.Contents().Meat(j).Type(), packet.Contents().Meat(j).Quantity()) for j in range (packet.Contents().MeatLength ())]
+    elif (msg_type == 2):
+        cm = HealthStatusMessage ()
+    
+        packet = health_message.Message.GetRootAs (buf, 0)
+  
+        cm.type = packet.Type()
+        cm.dispenser = packet.Contents().Dispenser()
+        cm.icemaker = packet.Contents().Icemaker()
+        cm.lightbulb = packet.Contents().Lightbulb()
+        cm.fridge_temp = packet.Contents().FridgeTemp()
+        cm.freezer_temp = packet.Contents().FreezerTemp()
+        cm.sensor_status = packet.Contents().SensorStatus()
+        cm.capacity_full = packet.Contents().CapacityFull()
+    
+    elif (msg_type == 3):
+        cm = ResponseMessage ()
+    
+        packet = response_message.Response_Message.GetRootAs (buf, 0)
+        #packet.Contents().decode('utf-8')
+        cm.type = packet.Type()
+        cm.code = packet.Code()
+        cm.contents = packet.Contents().decode('utf-8')
 
     return cm
+        
 
-def deserialize_h (buf):
-    cm_h = HealthStatusMessage ()
-    
-    packet = health_message.Message.GetRootAs (buf, 0)
-
-  
-    cm_h.type = packet.Type()
-    cm_h.dispenser = packet.Contents().Dispenser()
-    cm_h.icemaker = packet.Contents().Icemaker()
-    cm_h.lightbulb = packet.Contents().Lightbulb()
-    cm_h.fridge_temp = packet.Contents().FridgeTemp()
-    cm_h.freezer_temp = packet.Contents().FreezerTemp()
-    cm_h.sensor_status = packet.Contents().SensorStatus()
-    cm_h.capacity_full = packet.Contents().CapacityFull()
-    
-    return cm_h
-    
-def deserialize_r (buf):
-    cm_r = ResponseMessage ()
-    
-    packet = response_message.Response_Message.GetRootAs (buf, 0)
-
-    cm_r.type = packet.Type()
-    cm_r.code = packet.Code()
-    cm_r.contents = packet.Contents()
-    
-    return cm_r
-    
     
 # deserialize from frames
 def deserialize_from_frames (recvd_seq):
