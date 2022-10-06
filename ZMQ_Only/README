@@ -1,0 +1,118 @@
+###############################################################################
+#
+# Author: Aniruddha Gokhale
+# Institution: Vanderbilt University
+# Course: CS4283/5283 Computer Networks
+# Created: Fall 2022
+#
+# Updated README.md by Mary Stirling Brown to show three scenarios 
+# Purpose:
+#
+#    This directory contains ZMQ only code for client, router and server. This is for demo purposes to show how you can
+#     test out the basic chaining logic that we are intending to do for our PA2.
+###############################################################################
+
+Single Machine Scenario
+-----------------------------------
+
+To test this code on a single machine (localhost), you can try one or more routers but each will need a different port.
+You can test it as follows.
+
+
+(1) open 4 bash shells
+(2) In shell #1, run
+             python3 test_server.py
+     which will run the final server on port 5555
+
+(3) In shell #2, run
+             python3 test_router.py -p 4445 -P 5555 -t "Router2"
+        which will run the second hop router on port 4445 and which will connect to our server
+
+(3) In shell #3, run
+             python3 test_router.py -P 4445 -t "Router1"
+        which will run the first hop router on port 4444 (default)  and which will connect to our second hop on 4445
+
+(4) In shell #4, run
+             python3 test_client.py -p 4444
+        which will run the client that will connect to the first hop. You will notice responses of the HelloWorld message with
+        latencies printed.
+
+
+Client now takes a -m message option so that you can change HelloWorld to something else. Default number of iterations is 1000. The -t option for client and routers indicates the demultiplexing token to be used on return path to determine where to route the packet.
+
+
+Scenario 1: 7 hosts, 1 switch
+--------------------------------------
+
+(1) create a minent topology in Mininet so that the IP addresses are different.
+	 without loss:
+	   sudo mn --topo=single,7 --link=tc,delay=10msec
+	   
+	 with loss:   
+	   sudo mn --topo=single,7 --link=tc,delay=10msec,loss=5
+
+(2) Now source the commands.txt file on the Mininet prompt as follows:
+	   
+	   Mininet > source commands.txt
+	   
+      This will deploy routers and final server on the different emulated hosts as follows:
+      - final server on 10.0.0.7
+      - router each on 10.0.0.3 through 10.0.0.6
+	      
+	   
+(3) Now we manually run either 1 client or 2 different clients on the same host by:
+	1 client:
+      		Mininet> xterm h1
+      	2 clients: 
+      		Mininet> xterm h1 h1
+  	
+  	This will open either 1 or 2 xterms as shown. On each xterm, run the following command with a different message that each client wants to send. Each client will connect to the next hop router running on 10.0.0.3. Start the clients one by one noticing increasing delays as congestion build as more clients use the same route. You will only have 1 xterm if you are using 1 client as shown above.
+  	
+  	first xterm of h1:	python3 test_client.py -a 10.0.0.3 -p 4444 -m HelloClient1 -t "Client1"
+  	
+  	second xterm of h1: 	python3 test_client.py -a 10.0.0.3 -p 4444 -m HelloClient2 -t "Client2"
+
+ 
+ Scenario 2: 6 hosts, 6 switches
+--------------------------------------
+
+(1) create a minent topology in Mininet so that the IP addresses are different.
+	 without loss:
+	   sudo mn --topo=linear,7 --link=tc,delay=10msec
+	   
+	 with loss:   
+	   sudo mn --topo=linear,7 --link=tc,delay=10msec,loss=5
+
+(2) and (3) are run the same as Scenario 1 above.
+
+
+Scenario 3: 27 hosts, 13 switches
+--------------------------------------
+
+(1) create a minent topology in Mininet so that the IP addresses are different.
+	 without loss:
+	   sudo mn --topo=tree,depth=3,fanout=3 --link=tc,delay=10ms
+	   
+	 with loss:   
+	   sudo mn --topo=tree,depth=3,fanout=3 --link=tc,delay=10ms,loss=5
+
+(2) Now source the commands.txt file on the Mininet prompt as follows:
+	   
+	   Mininet > source commands2.txt
+	   
+      This will deploy routers and final server on the different emulated hosts as follows:
+      - final server on 10.0.0.27
+      - routers on 10.0.0.5, 10.0.0.7, 10.0.0.15, 10.0.0.18, 10.0.0.23, 10.0.0.19
+	      
+	   
+(3) Now we manually run either 1 client or 2 different clients on the same host by:
+	1 client:
+      		Mininet> xterm h1
+      	2 clients: 
+      		Mininet> xterm h1 h1
+  	
+  	This will open either 1 or 2 xterms as shown. On each xterm, run the following command with a different message that each client wants to send. Each client will connect to the next hop router running on 10.0.0.5. Start the clients one by one noticing increasing delays as congestion build as more clients use the same route. You will only have 1 xterm if you are using 1 client as shown above.
+  	
+  	first xterm of h1:	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient1 -t "Client1"
+  	
+  	second xterm of h1: 	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient2 -t "Client2"

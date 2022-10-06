@@ -1,0 +1,1768 @@
+Current libzmq version is 4.3.4
+Current pyzmq version is 23.2.1
+Demo program for TCP Router with ZeroMQ
+Obtain the ZMQ context
+Obtain the Poller
+Obtain the ROUTER type socket
+Bind the ROUTER socket
+TCP router will be binding on tcp://*:4444
+Router acquiring connection socket
+router setting its identity: Router1
+Router connecting to next hop
+TCP client will be connecting to tcp://10.0.0.4:4444
+Register sockets for incoming events
+Router now starting its forwarding loop
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
+Router received request from prev hop via ROUTER: [b'Client1', b'', b'HelloClient1']
+Forward the same request to next hop over the DEALER
+Poller polling
+Receive from next hop
+Router received response from next hop via DEALER: [b'Client1', b'', b'HelloClient1']
+Send reply to prev hop via ROUTER
+Poller polling
+Receive from prev hop
