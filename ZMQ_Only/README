@@ -60,20 +60,24 @@ Scenario 1: 7 hosts, 1 switch
       - router each on 10.0.0.3 through 10.0.0.6
 	      
 	   
-(3) Now we manually run either 1 client or 2 different clients on the same host by:
+(3) Now we manually run either 1, 2, or 3 client(s) on the same host by:
 	1 client:
       		Mininet> xterm h1
       	2 clients: 
       		Mininet> xterm h1 h1
+      	3 clients:
+      		Mininet> xterm h1 h1 h1
   	
   	This will open either 1 or 2 xterms as shown. On each xterm, run the following command with a different message that each client wants to send. Each client will connect to the next hop router running on 10.0.0.3. Start the clients one by one noticing increasing delays as congestion build as more clients use the same route. You will only have 1 xterm if you are using 1 client as shown above.
   	
   	first xterm of h1:	python3 test_client.py -a 10.0.0.3 -p 4444 -m HelloClient1 -t "Client1"
   	
   	second xterm of h1: 	python3 test_client.py -a 10.0.0.3 -p 4444 -m HelloClient2 -t "Client2"
+  	
+  	third xterm of h1:	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient3 -t "Client3"
 
  
- Scenario 2: 6 hosts, 6 switches
+ Scenario 2: 7 hosts, 7 switches
 --------------------------------------
 
 (1) create a minent topology in Mininet so that the IP addresses are different.
@@ -105,14 +109,18 @@ Scenario 3: 27 hosts, 13 switches
       - routers on 10.0.0.5, 10.0.0.7, 10.0.0.15, 10.0.0.18, 10.0.0.23, 10.0.0.19
 	      
 	   
-(3) Now we manually run either 1 client or 2 different clients on the same host by:
+(3) Now we manually run either 1, 2, or 3 client(s) on the same host by:
 	1 client:
       		Mininet> xterm h1
       	2 clients: 
       		Mininet> xterm h1 h1
+      	3 clients:
+      		Mininet> xterm h1 h1 h1
   	
   	This will open either 1 or 2 xterms as shown. On each xterm, run the following command with a different message that each client wants to send. Each client will connect to the next hop router running on 10.0.0.5. Start the clients one by one noticing increasing delays as congestion build as more clients use the same route. You will only have 1 xterm if you are using 1 client as shown above.
   	
   	first xterm of h1:	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient1 -t "Client1"
   	
   	second xterm of h1: 	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient2 -t "Client2"
+  	
+  	third xterm of h1:	python3 test_client.py -a 10.0.0.5 -p 4444 -m HelloClient3 -t "Client3"
