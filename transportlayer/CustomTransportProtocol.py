@@ -13,10 +13,10 @@ import os     # for OS functions
 import sys    # for syspath and system exception
 import csv
 import time
-import time
-import concurrent.futures
-#from threading import Event
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import random
+import concurrent.futures
+from threading import Event
 
 # add to the python system path so that packages can be found relative to
 # this directory
@@ -102,15 +102,12 @@ class CustomTransportProtocol ():
   
 
 
-  def sock_recv(socket):
+  def sock_recv():
     response = None
-    prob_drop = 0
     try:
-      #if prob_drop():
-      if prob_drop():
-        time.sleep(10)
-
-      response = socket.recv()
+      print("sleeping to simulate drop")
+      time.sleep(10)
+      print("somehow finished sleeping")
     except Exception as e:
       print(e)
     finally:
@@ -213,11 +210,13 @@ class CustomTransportProtocol ():
             #choice = random.randint(1,3)
             choice = 1
             sum += 1
-            #print(f"chunk is {chunk}")
-            #print(f"chunks size is {sys.getsizeof(chunk)}")
-            seq_num = int(not(seq_num))
 
             self.send_segment(choice, seq_num, chunk, size)
+            
+            ack = self.send_transport_ack(seq_num)
+            print(f"ack received is {ack}")
+            #time.sleep(1)
+            seq_num = int(not(seq_num))
             
             # sending one segment at a time
             #self.send_segment(choice, seq_num, chunk, size)
@@ -287,7 +286,7 @@ class CustomTransportProtocol ():
               self.nw_obj.send_packet (seq_num, chunk, len)
           elif choice == 2:
               print("Delay sending chunk to the next hop")
-              time.sleep(random.randint(1,10)) # delay for random integer from 1 to 10 
+              time.sleep(random.randint(1,3)) # delay for random integer from 1 to 10 
               self.nw_obj.send_packet (seq_num, chunk, len)
           elif choice == 3:
               print("Drop chunk")
@@ -344,37 +343,25 @@ class CustomTransportProtocol ():
       raise e
 
 
-  ######################################
-  #  send transport layer ack
-  ######################################
-  def send_transport_ack (self, seq_num, len):
-    try:
-      # receive a segment. In future assignments, we may be asking for
-      # a pipeline of segments.
-      #
-      # For this assignment, we do not care about all these things.
-      print ("Custom Transport Protocol::send_transport_ack")
-      self.nw_obj.send_nw_ack (seq_num, len)
-      #return segment
-    
-    except Exception as e:
-      raise e
+ 
     
 
   ######################################
-  #  receive transport layer ack
+  #  send transport layer ack
   ######################################
-  def recv_transport_ack (self, seq_num, len):
+  def send_transport_ack (self, seq_num):
     try:
       # receive a segment. In future assignments, we may be asking for
       # a pipeline of segments.
       #
       # For this assignment, we do not care about all these things.
       print ("Custom Transport Protocol::recv_transport_ack")
-      self.nw_obj.send_nw_ack (seq_num, len)
-      #return segment
+
+      return seq_num
     
     except Exception as e:
       raise e
-    
 
+  
+    
+ 
