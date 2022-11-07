@@ -159,12 +159,12 @@ class CustomNetworkProtocol ():
       #payload = packet[2]
       #print(f"seq_num is {seq_num} and packet is {packet}")
       
-      print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
+      #print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
       #print(packet)
       packet = packet.decode()
       #print(packet)
-      print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
-      str_packet = str(seq_num) + "~" + str(packet)
+      #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
+      str_packet = str(seq_num) + "!!!" + str(packet)
 
 
       if self.config["Application"]["Serialization"] == "json":
@@ -192,7 +192,7 @@ class CustomNetworkProtocol ():
       packet = self.socket.recv_multipart()[-1]
      # print(packet)
       packet.decode("utf-8")
-      #print(packet)
+      print(packet)
       #packet = self.socket.recv ()
       
       return packet
