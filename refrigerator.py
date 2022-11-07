@@ -179,7 +179,7 @@ class Refrigerator ():
       print(f"this is host_ip: {host_ip}")
       
       
-      
+      flag_split = 1
       
       #print("IPv4 address associated with interface {} are {}".format (intfs[1], dictionary[ni.AF_INET][0]['addr']))
     
@@ -197,7 +197,7 @@ class Refrigerator ():
       start_time = time.time()
 
       # send it to health server and see if we get a bad request reply
-      self.health_obj.send_grocery_order (msg, health_server_ip, dest_port)
+      self.health_obj.send_grocery_order (flag_split, msg, health_server_ip, dest_port)
       
       # now receive a response
       reply = self.health_obj.recv_response ()
@@ -206,14 +206,14 @@ class Refrigerator ():
       time_list.append(latency_time)
       print("latency time {}".format(latency_time))
       print ("Received reply {}".format (reply))
-
+      flag_split = 1
       # Test 2:
       # create a health status
       msg = self.gen_health_status_msg ()
       print ("Sending health msg to grocery server {}".format (msg))
       start_time = time.time()
       # send it to grocery server and see if we get a bad request reply
-      self.groc_obj.send_health_status (msg, groc_server_ip, dest_port)
+      self.groc_obj.send_health_status (flag_split, msg, groc_server_ip, dest_port)
       # now receive a response
 
       reply = self.groc_obj.recv_response ()
@@ -242,7 +242,7 @@ class Refrigerator ():
           print ("Sending grocery msg to grocery server {}".format (msg))
           start_time = time.time()
           # send it to health server and see if we get a bad request reply
-          self.groc_obj.send_grocery_order (msg, groc_server_ip, dest_port)
+          self.groc_obj.send_grocery_order (flag_split, msg, groc_server_ip, dest_port)
           # now receive a response
           print ("Waiting for response")
           response = self.groc_obj.recv_response ()
@@ -257,7 +257,7 @@ class Refrigerator ():
           print ("Sending health msg to health server {}".format (msg))
           start_time = time.time()
           # send it to grocery server and see if we get a bad request reply
-          self.health_obj.send_health_status (msg, health_server_ip, dest_port)
+          self.health_obj.send_health_status (flag_split, msg, health_server_ip, dest_port)
           # now receive a response
           print ("Waiting for response")
           response = self.health_obj.recv_response ()
