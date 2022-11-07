@@ -109,19 +109,18 @@ class GroceryOrder ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
-          print(f"message of chunk is {msg}")
-          print(f"type is {type(chunk)}")
-          print (f"seq_num is {seq_num}")
-          print (f"received chunk: {chunk}")
+          print(f"sending ack {seq_num}")
+          self.grocery_obj.send_ack (seq_num)
+          
           chunk_sum += 1
-          print(f"chunk sum is {chunk_sum}")
-          #request.append(msg)
+         
+         
           request = request + msg
           if chunk_sum == 64:
             print("received all chunks")
             break
         
-        print(f"appended {request}")
+        print(f"full request: {request}")
 
 
 

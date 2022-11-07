@@ -119,6 +119,8 @@ class HealthStatus ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
+          print(f"sending ack {seq_num}")
+          self.health_obj.send_ack (seq_num)
 
           chunk_sum += 1
 
