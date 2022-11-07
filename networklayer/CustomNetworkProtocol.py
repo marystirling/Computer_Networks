@@ -82,6 +82,7 @@ class CustomNetworkProtocol ():
         except:
           print ("Some exception occurred getting DEALER socket {}".format (sys.exc_info()[0]))
           return
+          
 
   
         try:
@@ -98,6 +99,9 @@ class CustomNetworkProtocol ():
           print ("Some exception occurred connecting REQ self.socket {}".format (sys.exc_info()[0]))
           self.socket.close ()
           return
+
+
+      
 
 
       else:
@@ -165,7 +169,7 @@ class CustomNetworkProtocol ():
       #print(packet)
       #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
       str_packet = str(seq_num) + "!!!" + str(packet)
-
+      #print(f"chunk in nw layer is {str_packet}")
 
       if self.config["Application"]["Serialization"] == "json":
         #self.socket.send (bytes(packet, "utf-8"))
@@ -192,7 +196,7 @@ class CustomNetworkProtocol ():
       packet = self.socket.recv_multipart()[-1]
      # print(packet)
       packet.decode("utf-8")
-      print(packet)
+      #print(f"packet after recv_packet is {packet}")
       #packet = self.socket.recv ()
       
       return packet
