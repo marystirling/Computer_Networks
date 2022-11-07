@@ -103,26 +103,55 @@ class HealthStatus ():
       # The health status server will run forever
       while True:
         
-        request = self.health_obj.recv_request ()
-        print ("Received request: {}".format (request))
+        #request = self.health_obj.recv_request ()
+        #print ("Received request: {}".format (request))
+
+
+        chunk_sum = 0
+        request = ''
+        #while True:
+        for i in range(64):
+          chunk = self.health_obj.recv_request ()
+          #chunk = chunk.decode("UTF-8")
+          #seq_num = chunk.split("~")[-1]
+         
+          chunk = chunk.decode("UTF-8")
+          chunk = chunk.split('!!!')
+          seq_num = chunk[0]
+          msg = chunk[-1]
+          #print(f"message of chunk is {msg}")
+          #print(f"type is {type(chunk)}")
+          #print (f"seq_num is {seq_num}")
+          #print (f"received chunk: {chunk}")
+          chunk_sum += 1
+          #print(f"chunk sum is {chunk_sum}")
+          #request.append(msg)
+          request = request + msg
+          if chunk_sum == 64:
+            print("received all chunks")
+            break
         
-        #request = bytes(request.replace("\'", "\""), "utf-8")
-        #request = request.encode("utf-8")
-        request = request.decode("Utf-8")
-        request = request.split("~~")[0]
-        print(request)
-        seq_num, dest_ip, dest_port, payload = request.split("~")
+        print(f"appended {request}")
+
+
+
+        request = request.split("###")[0]
+        
+        flag_split, dest_ip, dest_port, payload = request.split("~")
 
         print ("Received request: {}".format (request))
         #request = bytes(request, "utf-8")
         resp = self.gen_response_msg()
-        request = payload
+        #request = payload
         resp.type = resp.msg["type"] = 3
         
         if (self.ser_type == "json"):
             print ("deserialize the message")
-            msg_d = sz_json.deserialize (request)
-            #msg_d.__str__()
+            flag_split = 0
+            print(payload)
+            msg_d = sz_json.deserialize (payload)
+            
+            msg_d.__str__()
             if (msg_d.type == 2):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "You are Healthy"
@@ -141,7 +170,7 @@ class HealthStatus ():
                 resp.contents = resp.msg["contents"] = "Bad Request"
 
         
-        self.health_obj.send_response (dest_ip, dest_port, resp)
+        self.health_obj.send_response (flag_split, dest_ip, dest_port, resp)
         
     except Exception as e:
       raise e

@@ -64,7 +64,7 @@ class GroceryOrder ():
     
       # Next, obtain the custom application protocol object
       self.grocery_obj = ApplnProtoObj (True)  # the True flag indicates this is a server side
-      print("diod we  make it in here")
+
 
       # initialize the custom application objects
       self.grocery_obj.initialize (config, args.addr, args.port)
@@ -91,19 +91,49 @@ class GroceryOrder ():
     try:
       # The health status server will run forever
       while True:
+        
+        #request = self.health_obj.recv_request ()
+        #print ("Received request: {}".format (request))
 
-        request = self.grocery_obj.recv_request ()
+        print("did we make it in the groc server")
+        chunk_sum = 0
+        request = ''
+        #while True:
+        for i in range(64):
+          print("are we trying to receive")
+          chunk = self.grocery_obj.recv_request ()
+          #chunk = chunk.decode("UTF-8")
+          #seq_num = chunk.split("~")[-1]
+         
+          chunk = chunk.decode("UTF-8")
+          chunk = chunk.split('!!!')
+          seq_num = chunk[0]
+          msg = chunk[-1]
+          print(f"message of chunk is {msg}")
+          print(f"type is {type(chunk)}")
+          print (f"seq_num is {seq_num}")
+          print (f"received chunk: {chunk}")
+          chunk_sum += 1
+          print(f"chunk sum is {chunk_sum}")
+          #request.append(msg)
+          request = request + msg
+          if chunk_sum == 64:
+            print("received all chunks")
+            break
+        
+        print(f"appended {request}")
+
+
+
+
+        request = request.split("###")[0]
+        
+        flag_split, dest_ip, dest_port, payload = request.split("~")
+
         print ("Received request: {}".format (request))
-        
-        request = request.decode("Utf-8")
-        request = request.split("~~")[0]
-        seq_num, dest_ip, dest_port, payload = request.split("~")
-
-        print ("Received request: {}".format (request))
-        
-
-        resp = self.gen_response_msg ()
-        
+        #request = bytes(request, "utf-8")
+        resp = self.gen_response_msg()
+        #request = payload
         resp.type = resp.msg["type"] = 3
 
         if (self.ser_type == "json"):
@@ -127,7 +157,7 @@ class GroceryOrder ():
                 resp.code = resp.msg["code"] = 1
                 resp.contents = resp.msg["contents"] = "Bad Request"
         
-        self.grocery_obj.send_response (dest_ip, dest_port, resp)
+        self.grocery_obj.send_response (flag_split, dest_ip, dest_port, resp)
         
     except Exception as e:
       raise e
