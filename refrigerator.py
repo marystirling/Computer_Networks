@@ -22,6 +22,7 @@ import configparser # for configuration parsing
 import zmq # actually not needed here but we are printing zmq version and hence needed
 import random 
 import time
+import netifaces as ni
 
 
 
@@ -36,6 +37,9 @@ from applnlayer.ApplnMessageTypes import HealthStatusMessage
 from applnlayer.ApplnMessageTypes import ResponseMessage
 
 time_list = []
+groc_server_ip = ''
+health_server_ip = ''
+dest_port = 5555
 ##################################
 #       Refrigerator class
 ##################################
@@ -67,6 +71,14 @@ class Refrigerator ():
       # Now, get the configuration object
       config = configparser.ConfigParser ()
       config.read (args.config)
+      
+      if (config["Network"]["Route"] == "route1"):
+          groc_server_ip = "10.0.0.5"
+          health_server_ip = "10.0.0.6"
+      elif (config["Network"]["Route"] == "route2"):
+          groc_server_ip = "10.0.0.1"
+          health_server_ip = "10.0.0.27"
+      print(f"GROCERY SERVER IP is {groc_server_ip}")
     
       # Next, obtain the custom application protocol objects
       self.groc_obj = ApplnProtoObj (False)  # the false flag indicates this is a client side
@@ -142,7 +154,7 @@ class Refrigerator ():
   # Driver program
   ##################################
   time_list = []
-  def driver (self):
+  def driver (self, args):
     try:
 
       # To ensure that bad requests are handled correctly, initially let us first
@@ -150,13 +162,43 @@ class Refrigerator ():
 
       # Test 1:
       # create a grocery order
-
+      config = configparser.ConfigParser ()
+      config.read (args.config)
+      
+      intfs = ni.interfaces()
+      #intf, ni.ifaddresses (intf)[ni.AF_INET][0]['addr']
+      
+      for intf in intfs:
+          print("IP addresses associated with interface {} are {}".format (intf, ni.ifaddresses (intf)))
+      host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
+      print(type(host_ip))
+      print(host_ip)
+      hostname = "H" + host_ip.split(".")[-1]
+      print (f"this is hostname: {hostname}")
+      host_ip = "10.0.0." + str(hostname.split("H",1)[-1])
+      print(f"this is host_ip: {host_ip}")
+      
+      
+      
+      
+      #print("IPv4 address associated with interface {} are {}".format (intfs[1], dictionary[ni.AF_INET][0]['addr']))
+    
+      
+      if (config["Network"]["Route"] == "route1"):
+          groc_server_ip = "10.0.0.5"
+          health_server_ip = "10.0.0.6"
+      elif (config["Network"]["Route"] == "route2"):
+          groc_server_ip = "10.0.0.1"
+          health_server_ip = "10.0.0.27"
+          
       msg = self.gen_grocery_order_msg ()
+
       print ("Sending grocery msg to health server {}".format (msg))
       start_time = time.time()
-      #print(start_time)
+
       # send it to health server and see if we get a bad request reply
-      self.health_obj.send_grocery_order (msg)
+      self.health_obj.send_grocery_order (msg, health_server_ip, dest_port)
+      
       # now receive a response
       reply = self.health_obj.recv_response ()
       end_time = time.time()
@@ -171,7 +213,7 @@ class Refrigerator ():
       print ("Sending health msg to grocery server {}".format (msg))
       start_time = time.time()
       # send it to grocery server and see if we get a bad request reply
-      self.groc_obj.send_health_status (msg)
+      self.groc_obj.send_health_status (msg, groc_server_ip, dest_port)
       # now receive a response
 
       reply = self.groc_obj.recv_response ()
@@ -192,14 +234,15 @@ class Refrigerator ():
       # Just alternating between the two is fine. What we really care is that both
       # kinds of message types can be sent, and that if they received by the right
       # server, we get a success response. Time the result.
-      for i in range (self.iters):
+      for i in range(2):
+      #for i in range (self.iters):
         if (i % 2) == 0:
           # create a grocery order
           msg = self.gen_grocery_order_msg ()
           print ("Sending grocery msg to grocery server {}".format (msg))
           start_time = time.time()
           # send it to health server and see if we get a bad request reply
-          self.groc_obj.send_grocery_order (msg)
+          self.groc_obj.send_grocery_order (msg, groc_server_ip, dest_port)
           # now receive a response
           print ("Waiting for response")
           response = self.groc_obj.recv_response ()
@@ -214,7 +257,7 @@ class Refrigerator ():
           print ("Sending health msg to health server {}".format (msg))
           start_time = time.time()
           # send it to grocery server and see if we get a bad request reply
-          self.health_obj.send_health_status (msg)
+          self.health_obj.send_health_status (msg, health_server_ip, dest_port)
           # now receive a response
           print ("Waiting for response")
           response = self.health_obj.recv_response ()
@@ -246,6 +289,15 @@ def parseCmdLineArgs ():
   parser.add_argument ("-q", "--status_port", type=int, default=7777, help="Port that Healt Status server is listening on (default: 7777)")
   parser.add_argument ("-r", "--req_ratio", default="1:1", help="Ratio of grocery orders sent to health status (default: 1:1 implying equal number)")
   
+  
+  parser.add_argument ("-a", "--addr", default="127.0.0.1", help="IP Address of next hop router to connect to (default: localhost i.e., 127.0.0.1)")
+  parser.add_argument ("-n", "--port", type=int, default=4444, help="Port that next hop router is listening on (default: 4444)")
+  #parser.add_argument ("-i", "--iters", type=int, default=1000, help="Number of iterations (default: 1000")
+  parser.add_argument ("-m", "--message", default="HelloWorld", help="Message to send: default HelloWorld")
+  parser.add_argument ("-t", "--demux_token", default="client", help="Our identity used as a demultiplexing token (default: client)")
+  #parser.add_argument ("-fp", "--finalport", type=int, default=5555, help="Final destination port (default: 5555)")
+  #parser.add_argument ("-fip", "--finalip", default ="*", help = "Final destination ip (default: all)")
+  
   args = parser.parse_args ()
 
   return args
@@ -272,7 +324,7 @@ def main ():
 
     # Now drive the rest of the assignment
     print ("Refrigerator main: invoke driver")
-    fridge.driver ()
+    fridge.driver (parsed_args)
     print(time_list)
 
     # we are done. collect results and do the plotting etc.

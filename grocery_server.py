@@ -64,6 +64,7 @@ class GroceryOrder ():
     
       # Next, obtain the custom application protocol object
       self.grocery_obj = ApplnProtoObj (True)  # the True flag indicates this is a server side
+      print("diod we  make it in here")
 
       # initialize the custom application objects
       self.grocery_obj.initialize (config, args.addr, args.port)
@@ -94,6 +95,11 @@ class GroceryOrder ():
         request = self.grocery_obj.recv_request ()
         print ("Received request: {}".format (request))
         
+        request = request.decode("Utf-8")
+        request = request.split("~~")[0]
+        seq_num, dest_ip, dest_port, payload = request.split("~")
+
+        print ("Received request: {}".format (request))
         
 
         resp = self.gen_response_msg ()
@@ -102,7 +108,7 @@ class GroceryOrder ():
 
         if (self.ser_type == "json"):
             print ("deserialize the message")
-            msg_d = sz_json.deserialize (request)
+            msg_d = sz_json.deserialize (payload)
             #msg_d.__str__()
             if (msg_d.type == 1):
                 resp.code = resp.msg["code"] = 0
@@ -120,8 +126,8 @@ class GroceryOrder ():
             else:
                 resp.code = resp.msg["code"] = 1
                 resp.contents = resp.msg["contents"] = "Bad Request"
-
-        self.grocery_obj.send_response (resp)
+        
+        self.grocery_obj.send_response (dest_ip, dest_port, resp)
         
     except Exception as e:
       raise e
@@ -137,6 +143,8 @@ def parseCmdLineArgs ():
   parser.add_argument ("-c", "--config", default="config.ini", help="configuration file (default: config.ini")
   parser.add_argument ("-a", "--addr", default="*", help="Interface we are accepting connections on (default: all)")
   parser.add_argument ("-p", "--port", type=int, default=5555, help="Port the health status server is listening on (default: 5555)")
+ #parser.add_argument ("-fp", "--finalport", type=int, default=5555, help="Final destination port (default: 5555)")
+  #parser.add_argument ("-fip", "--finalip", default ="*", help = "Final destination ip (default: all)")
   
   args = parser.parse_args ()
 

@@ -102,14 +102,23 @@ class HealthStatus ():
     try:
       # The health status server will run forever
       while True:
-
+        
         request = self.health_obj.recv_request ()
         print ("Received request: {}".format (request))
         
-        resp = self.gen_response_msg()
-        
-        resp.type = resp.msg["type"] = 3
+        #request = bytes(request.replace("\'", "\""), "utf-8")
+        #request = request.encode("utf-8")
+        request = request.decode("Utf-8")
+        request = request.split("~~")[0]
+        print(request)
+        seq_num, dest_ip, dest_port, payload = request.split("~")
 
+        print ("Received request: {}".format (request))
+        #request = bytes(request, "utf-8")
+        resp = self.gen_response_msg()
+        request = payload
+        resp.type = resp.msg["type"] = 3
+        
         if (self.ser_type == "json"):
             print ("deserialize the message")
             msg_d = sz_json.deserialize (request)
@@ -132,7 +141,7 @@ class HealthStatus ():
                 resp.contents = resp.msg["contents"] = "Bad Request"
 
         
-        self.health_obj.send_response (resp)
+        self.health_obj.send_response (dest_ip, dest_port, resp)
         
     except Exception as e:
       raise e
@@ -148,6 +157,7 @@ def parseCmdLineArgs ():
   parser.add_argument ("-c", "--config", default="config.ini", help="configuration file (default: config.ini")
   parser.add_argument ("-a", "--addr", default="*", help="Interface we are accepting connections on (default: all)")
   parser.add_argument ("-p", "--port", type=int, default=7777, help="Port the health status server is listening on (default: 7777)")
+ 
   
   args = parser.parse_args ()
 
