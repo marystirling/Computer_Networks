@@ -97,9 +97,7 @@ class CustomTransportProtocol ():
       raise e  # just propagate it
   
 
-  def prob_drop ():
-    return random.randint(1, 100)
-  
+ 
 
 
   def sock_recv():
@@ -114,60 +112,7 @@ class CustomTransportProtocol ():
       return response
 
 
-  def c_alternating_bit(self, socket):
-    print("sending with alternating bit protocol")
-    flag = True
-    sock_recv = 0
-    for i in range(self.iters):
-      try:
-        message = f"m={i}f={1 if flag else 0}"
-        socket.send(bytes(message), "utf-8")
-      except Exception as e:
-        print("error when sending message in c_alternating_bit")
-      try:
-        with concurrent.futures.ThreadPoolExecutor (max_workers=1) as executor:
-          future = executor.submit(sock_recv, socket)
-          print("future: {future}")
-          response = future.result(timeout=self.timeout)
-          print(f"response: {response}")
-          ack = True if response == b'1' else False
-          if flag == ack:
-            print("response ack our message")
-            flag = not flag
-      except Exception as e:
-        print("mesage timed out")
-    return None
-
-  def s_alternating_bit(socket):
-    print("using alternating bit protocol")
-    last = False
-    while True:
-      try:
-        message = str(socket.recv(), "utf-8")
-        print(f"received: {message}")
-      except Exception as e:
-        print(e)
-        socket.close()
-      try:
-        def is_good(m):
-          return (int(m[-1] == 0) or (int(m[-1] == 1)))
-        if is_good(message):
-          message_flag = True if int(message[-1]) == 1 else False
-          if message_flag != last:
-            resp = bytes(str(1 if not last else 0), "utf-8")
-            print(f"sending good ack: {resp}")
-          else:
-            resp = bytes(str(1 if last else 0), "utf-8")
-            print(f"sending bad ack: {resp}")
-        else:
-          print("message was bad")
-          resp = bytes(str(1 if last else 0), "utf-8")
-        print(f"responding: {resp}")
-        socket.send(resp)
-      except Exception as e:
-        print(e)
-        socket.close()
-        return
+ 
 
 
 
@@ -179,7 +124,7 @@ class CustomTransportProtocol ():
 
     protocol = self.config["Transport"]["TransportProtocol"]
       
-    print(f"Role is: {self.role}")
+    
     try:
       # @TODO@ Implement this
       # What we should get here is a serialized message from the application
@@ -280,9 +225,7 @@ class CustomTransportProtocol ():
       if protocol == "AlternatingBit":
           #print("do alternating bit")
           if choice == 1:
-              #print("Send the chunk to the next hop")
-              #print(f"what i am sending to network layer is {sys.getsizeof(chunk)}")
-              #print(chunk)
+              print("Send the chunk to the next hop")
               self.nw_obj.send_packet (seq_num, chunk, len)
           elif choice == 2:
               print("Delay sending chunk to the next hop")
@@ -310,16 +253,15 @@ class CustomTransportProtocol ():
       # For this assignment, we do not care about all these things.
       print ("Custom Transport Protocol::recv_appln_msg")
       appln_msg = self.recv_segment ()
-      #print(f"now we have {appln_msg}")
+
       full_msg = []
-      #appln_msg = []
+
       buffer = []
 
 
       if self.config["Transport"]["TransportProtocol"] == "AlternatingBit":
           print("alternating bit protocol")
           
-      print(f"appln message: {appln_msg}")
       return appln_msg
     
     except Exception as e:
@@ -355,7 +297,7 @@ class CustomTransportProtocol ():
       # a pipeline of segments.
       #
       # For this assignment, we do not care about all these things.
-      print ("Custom Transport Protocol::recv_transport_ack")
+      print ("Custom Transport Protocol::semd_transport_ack")
 
       return seq_num
     

@@ -158,22 +158,14 @@ class CustomNetworkProtocol ():
       # Here, we simply delegate to our ZMQ socket to send the info
       print ("Custom Network Protocol::send_packet")
       
-      #dest_ip = packet[0]
-      #dest_port = packet[1]
-      #payload = packet[2]
-      #print(f"seq_num is {seq_num} and packet is {packet}")
-      
-      #print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
-      #print(packet)
+     
       packet = packet.decode()
-      #print(packet)
-      #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
-      str_packet = str(seq_num) + "!!!" + str(packet)
+      packet = str(seq_num) + "!!!" + str(packet)
       #print(f"chunk in nw layer is {str_packet}")
 
       if self.config["Application"]["Serialization"] == "json":
         #self.socket.send (bytes(packet, "utf-8"))
-        self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
+        self.socket.send_multipart([b'', bytes(packet,"utf-8")])
       elif self.config["Application"]["Serialization"] == "fbufs":
         self.socket.send (packet)
 
@@ -204,33 +196,4 @@ class CustomNetworkProtocol ():
       raise e
 
  
-
-  def send_nw_ack (self, seq_num, packet, len=0):
-    try:
-      # @TODO@ Note that this method always receives bytes. So if you want to
-      # convert to json, some mods will be needed here. Use the config.ini file.
-      print ("CustomNetworkProtocol::send_nw_ack")
-      seq_num = bytes(seq_num)
-      #self.socket.send_multipart ([b'',str(seq_num) + "~" + packet])
-      self.socket.send(seq_num, len)
-      #print("made it past this packet thing")
-      
-    except Exception as e:
-      raise e
-
-
-
-  def recv_nw_ack (self, seq_num, len=0):
-    try:
-      # @TODO@ Note that this method always receives bytes. So if you want to
-      # convert to json, some mods will be needed here. Use the config.ini file.
-      print ("CustomNetworkProtocol::recv_nw_ack")
-      ack = self.socket.recv_multipart()
-      
-      return ack
-      
-      
-      return packet
-    except Exception as e:
-      raise e
 

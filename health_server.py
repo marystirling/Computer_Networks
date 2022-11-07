@@ -129,7 +129,7 @@ class HealthStatus ():
             print("received all chunks")
             break
         
-        print(f"appended {request}")
+        #print(f"appended {request}")
 
 
 
