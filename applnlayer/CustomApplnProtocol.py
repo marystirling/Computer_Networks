@@ -14,6 +14,7 @@ import os     # for OS functions
 import sys    # for syspath and system exception
 import time   # for sleep
 from enum import Enum  # for enumerated types
+import csv
 
 # add to the python system path so that packages can be found relative to
 # this directory
@@ -23,6 +24,7 @@ from transportlayer.CustomTransportProtocol import CustomTransportProtocol as XP
 import serialize_flatbuf as sz_fb
 import serialize_json as sz_json
 
+
 ############################################
 #  Serialization Enumeration Type
 ############################################
@@ -31,7 +33,14 @@ class SerializationType (Enum):
   UNKNOWN = -1
   JSON = 1
   FBUFS = 2
+  
+class RoutePath (Enum):
+  UNKNOWN = -1
+  R1 = 1
+  R2 = 2
 
+
+refrigerator_ip = ''
 ############################################
 #  Bunch of Application Layer Exceptions
 #
@@ -61,6 +70,7 @@ class CustomApplnProtocol ():
   def __init__ (self, role):
     self.role = role  # indicates if we are client or server, false => client
     self.ser_type = SerializationType.UNKNOWN
+    self.route = RoutePath.UNKNOWN
     self.xport_obj = None # handle to our underlying transport layer object
     
   ###############################
@@ -81,14 +91,24 @@ class CustomApplnProtocol ():
         self.ser_type = SerializationType.FBUFS
       else:  # Unknown; raise exception
         raise BadSerializationType (config["Application"]["Serialization"])
+    
+      
+      if (config["Network"]["Route"] == "route1"):
+          with open("route1.csv") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if(row[0]== 'H1' and row[1] == '10.0.0.6'):
+                    print("hit")
+                else:
+                    print("miss")
 
       # Now obtain our transport object
       # @TODO
-      #print ("Custom Appln Protocol::initialize - obtain transport object")
+      print ("Custom Appln Protocol::initialize - obtain transport object")
       self.xport_obj = XPortProtoObj (self.role)
 
       # initialize it
-      #print ("Custom Appln Protocol::initialize - initialize transport object")
+      print ("Custom Appln Protocol::initialize - initialize transport object")
       self.xport_obj.initialize (config, ip, port)
       
     except Exception as e:
@@ -97,7 +117,7 @@ class CustomApplnProtocol ():
   ##################################
   #  send Grocery Order
   ##################################
-  def send_grocery_order (self, order):
+  def send_grocery_order (self, flag_split, order, dest_ip, dest_port):
     try:
 
       if order.msg["type"] == 1:
@@ -119,15 +139,15 @@ class CustomApplnProtocol ():
           raise BadMessageType
       
 
-      #print ("CustomApplnProtocol::send_grocery_order")
-      self.xport_obj.send_appln_msg (buf, len (buf))
+      print ("CustomApplnProtocol::send_grocery_order")
+      self.xport_obj.send_appln_msg (flag_split, dest_ip, dest_port, buf, len (buf))
     except Exception as e:
       raise e
 
   ##################################
   #  send Health Status
   ##################################
-  def send_health_status (self, status):
+  def send_health_status (self, flag_split, status, dest_ip, dest_port):
     try:
       
       if status.msg["type"] == 2:
@@ -150,15 +170,15 @@ class CustomApplnProtocol ():
           raise BadMessageType
         
         
-      #print ("CustomApplnProtocol::send_health_status")
-      self.xport_obj.send_appln_msg (buf, len (buf))
+      print ("CustomApplnProtocol::send_health_status")
+      self.xport_obj.send_appln_msg (flag_split, dest_ip, dest_port, buf, len (buf))
     except Exception as e:
       raise e
 
   ##################################
   #  send response
   ##################################
-  def send_response (self, response):
+  def send_response (self, flag_split, dest_ip, dest_port, response):
     try:
       # @TODO@ Implement this
       # Essentially, you will need to take the Health Status supplied in native host
@@ -190,8 +210,8 @@ class CustomApplnProtocol ():
           raise BadMessageType
       
       
-      #print ("CustomApplnProtocol::send_response")
-      self.xport_obj.send_appln_msg (buf, len (buf))
+      print ("CustomApplnProtocol::send_response")
+      self.xport_obj.send_appln_msg (flag_split, dest_ip, dest_port, buf, len (buf))
     except Exception as e:
       raise e
 
@@ -209,8 +229,10 @@ class CustomApplnProtocol ():
       # Note, that in this assignment, we are not worrying about sending
       # transport segments etc and so what we receive from ZMQ is the complete
       # message.
-      #print ("CustomApplnProtocol::recv_appln_msg")
+      print ("CustomApplnProtocol::recv_appln_msg")
+      print("so now we here")
       request = self.xport_obj.recv_appln_msg ()
+      print(request)
 
       return request
     except Exception as e:
@@ -232,15 +254,26 @@ class CustomApplnProtocol ():
       # message.
       
 
-      #print ("CustomApplnProtocol::recv_response")
+      print ("CustomApplnProtocol::recv_response")
       response = self.xport_obj.recv_appln_msg ()
+
       
-      
+      response = response.decode("Utf-8")
+      response = response.split("!!!")
+      response = response[-1]
+      print(f"response now is: {response}")
+
+      response = response.split("###")[0]
+        
+      flag_split, dest_ip, dest_port, payload = response.split("~")
+
+      #flag_split, dest_ip, dest_port, payload = response.split("~")
+
       
       if self.ser_type == SerializationType.JSON:
               print ("deserialize the message")
 
-              response_msg = sz_json.deserialize (response)
+              response_msg = sz_json.deserialize (payload)
  
               response.__str__()
               
@@ -252,7 +285,7 @@ class CustomApplnProtocol ():
               response.__str__()
              
 
-      #response_msg = sz_json.deserialize_r(response)
+
       return response_msg
     except Exception as e:
       raise e
