@@ -178,7 +178,7 @@ class CustomTransportProtocol ():
   ##################################
   #  send application message
   ##################################
-  def send_appln_msg (self, dest_ip, dest_port, payload, size):
+  def send_appln_msg (self, flag_split, dest_ip, dest_port, payload, size):
 
     protocol = self.config["Transport"]["TransportProtocol"]
       
@@ -194,7 +194,7 @@ class CustomTransportProtocol ():
       # segment
       
       print ("Custom Transport Protocol::send_appln_msg")
-      segment = dest_ip + "~" + str(dest_port) + "~" + payload + "~~"
+      segment = str(flag_split) + "~" + dest_ip + "~" + str(dest_port) + "~" + payload + "###"
       
       segment = bytes(segment,"utf-8")
       segment = GetPaddedSegment(segment)
@@ -202,59 +202,67 @@ class CustomTransportProtocol ():
       print(f"Segment in transport layer {sys.getsizeof(segment)}")
 
 
-      
-      
-      if protocol == "AlternatingBit":
-        window_size = 1
-        seq_num = 0
-        
-        for i in range(0, sys.getsizeof(segment), MTU):
-          chunk = segment[i:i+MTU-1]
-          #choice = random.randint(1,3)
-          choice = 1
-          print(f"chunk is {chunk}")
-          print(f"chunks size is {sys.getsizeof(chunk)}")
-          seq_num = int(not(seq_num))
+      print(segment)
+      if (flag_split):
+        if protocol == "AlternatingBit":
+          window_size = 1
+          seq_num = 0
+          sum = 0
+          for i in range(0, sys.getsizeof(segment), MTU):
+            chunk = segment[i:i+MTU]
+            #choice = random.randint(1,3)
+            choice = 1
+            sum += 1
+            #print(f"chunk is {chunk}")
+            #print(f"chunks size is {sys.getsizeof(chunk)}")
+            seq_num = int(not(seq_num))
 
-          #self.send_segment(choice, seq_num, chunk, size)
-          
-          # sending one segment at a time
-          #self.send_segment(choice, seq_num, chunk, size)
-          # wait until timeout or receives an ack
-          # if timeout then resend chunk
-          # else if ack has been received then move onto next chunk
-   
-      elif protocol == "GoBackN":
-        window_size = 8
-        seq_num = 0
-        sum = 0
-        buffer = []
-        for i in range(0, sys.getsizeof(segment), MTU):
-          chunk = segment[i:i+MTU-1]
-          choice = random.randint(1,3)
-          choice = 1
-          if seq_num < window_size:
+            self.send_segment(choice, seq_num, chunk, size)
+            
+            # sending one segment at a time
             #self.send_segment(choice, seq_num, chunk, size)
-            buffer.append(chunk)
-          
-          # have a way to tell which seq_num have an ack
-          # resend those with timeout 
-          # once all have an ack then move window size to next 8 chunks
-
-       
-      elif protocol == "SelectiveRepeat":
-        window_size = 8
+            # wait until timeout or receives an ack
+            # if timeout then resend chunk
+            # else if ack has been received then move onto next chunk
     
-      #self.send_segment(choice, seq_num, segment, size)
+        elif protocol == "GoBackN":
+          window_size = 8
+          seq_num = 0
+          sum = 0
+          buffer = []
+          for i in range(0, sys.getsizeof(segment), MTU):
+            chunk = segment[i:i+MTU-1]
+            choice = random.randint(1,3)
+            choice = 1
+            sum += 1
 
+            if seq_num < window_size:
+              #self.send_segment(choice, seq_num, chunk, size)
+              buffer.append(chunk)
 
+            
+            # have a way to tell which seq_num have an ack
+            # resend those with timeout 
+            # once all have an ack then move window size to next 8 chunks
+
+        
+        elif protocol == "SelectiveRepeat":
+          window_size = 8
       
-  
+        #self.send_segment(choice, seq_num, segment, size)
+      else:
+        choice = 1
+        seq_num = 0
+        self.send_segment(choice, seq_num, segment, size)
+
+        
+    
       choice = 1
       print(f"The size of my packet in transport layer is: {sys.getsizeof(segment)}")
       print(f" final choice is: {choice}")
       #print(segment)
-      self.send_segment(choice, seq_num, segment, size)
+      #print(f"sum is {sum}")
+      #self.send_segment(choice, seq_num, segment, size)
 
     except Exception as e:
       raise e
@@ -263,18 +271,17 @@ class CustomTransportProtocol ():
   #  send transport layer segment
   ##################################
   def send_segment (self, choice, seq_num, chunk, len=0):
-    print("here")
     protocol = self.config["Transport"]["TransportProtocol"]
     #print(chunk)
     try:
       # For this assignment, we ask our dummy network layer to
       # send it to peer. We ignore the length in this assignment
       print ("Custom Transport Protocol::send_segment")
-      
+
       if protocol == "AlternatingBit":
-          print("do alternating bit")
+          #print("do alternating bit")
           if choice == 1:
-              print("Send the chunk to the next hop")
+              #print("Send the chunk to the next hop")
               #print(f"what i am sending to network layer is {sys.getsizeof(chunk)}")
               #print(chunk)
               self.nw_obj.send_packet (seq_num, chunk, len)
@@ -308,10 +315,12 @@ class CustomTransportProtocol ():
       full_msg = []
       #appln_msg = []
       buffer = []
+
+
       if self.config["Transport"]["TransportProtocol"] == "AlternatingBit":
           print("alternating bit protocol")
           
-          
+      print(f"appln message: {appln_msg}")
       return appln_msg
     
     except Exception as e:
