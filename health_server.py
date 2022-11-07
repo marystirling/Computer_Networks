@@ -119,13 +119,9 @@ class HealthStatus ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
-          #print(f"message of chunk is {msg}")
-          #print(f"type is {type(chunk)}")
-          #print (f"seq_num is {seq_num}")
-          #print (f"received chunk: {chunk}")
+
           chunk_sum += 1
-          #print(f"chunk sum is {chunk_sum}")
-          #request.append(msg)
+
           request = request + msg
           if chunk_sum == 64:
             print("received all chunks")
@@ -151,7 +147,7 @@ class HealthStatus ():
             print(payload)
             msg_d = sz_json.deserialize (payload)
             
-            msg_d.__str__()
+            #msg_d.__str__()
             if (msg_d.type == 2):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "You are Healthy"

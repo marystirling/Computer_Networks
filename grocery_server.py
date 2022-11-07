@@ -140,6 +140,7 @@ class GroceryOrder ():
             print ("deserialize the message")
             msg_d = sz_json.deserialize (payload)
             #msg_d.__str__()
+            flag_split = 0
             if (msg_d.type == 1):
                 resp.code = resp.msg["code"] = 0
                 resp.contents = resp.msg["contents"] = "Order Placed"
