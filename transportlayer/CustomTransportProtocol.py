@@ -29,6 +29,21 @@ FULL_PACKET_SIZE = 1024 # application request packet size of 1024 bytes
 MTU = 16 # maximum transfer unit of 16 bytes
 ack_list = []
 
+def timer(self, choice):
+    response = None
+    print("do i ever enter timer")
+    try:
+      if choice == 3:
+        print("sleeping to simulate drop")
+        time.sleep(10)
+        print("somehow finished sleeping")
+      else:
+        response = 1
+    except Exception as e:
+      print(e)
+    finally:
+      return response
+
 def GetPaddedSegment(segment):
     segment_size = sys.getsizeof(segment)
     added_bits = FULL_PACKET_SIZE - segment_size
@@ -38,11 +53,14 @@ def GetPaddedSegment(segment):
     #print(f"segment size: {segment_size}")
     return segment
 
-############################################
-#  Bunch of Transport Layer Exceptions
-#
-# @TODO@ Add more, if these are not enough
-############################################
+def getChunks(segment, MTU):
+  chunked_list = []
+  for i in range(0, sys.getsizeof(segment), MTU):
+    #chunk = segment[i:i+MTU]
+    chunked_list.append(segment[i:i+MTU])
+  return chunked_list
+
+
 
 ############################################
 #       Custom Transport Protocol class
@@ -100,80 +118,6 @@ class CustomTransportProtocol ():
       raise e  # just propagate it
   
 
-  def prob_drop ():
-    return random.randint(1, 100)
-  
-
-
-  def sock_recv():
-    response = None
-    try:
-      print("sleeping to simulate drop")
-      time.sleep(10)
-      print("somehow finished sleeping")
-    except Exception as e:
-      print(e)
-    finally:
-      return response
-
-
-  def c_alternating_bit(self, socket):
-    print("sending with alternating bit protocol")
-    flag = True
-    sock_recv = 0
-    for i in range(self.iters):
-      try:
-        message = f"m={i}f={1 if flag else 0}"
-        socket.send(bytes(message), "utf-8")
-      except Exception as e:
-        print("error when sending message in c_alternating_bit")
-      try:
-        with concurrent.futures.ThreadPoolExecutor (max_workers=1) as executor:
-          future = executor.submit(sock_recv, socket)
-          print("future: {future}")
-          response = future.result(timeout=self.timeout)
-          print(f"response: {response}")
-          ack = True if response == b'1' else False
-          if flag == ack:
-            print("response ack our message")
-            flag = not flag
-      except Exception as e:
-        print("mesage timed out")
-    return None
-
-  def s_alternating_bit(socket):
-    print("using alternating bit protocol")
-    last = False
-    while True:
-      try:
-        message = str(socket.recv(), "utf-8")
-        print(f"received: {message}")
-      except Exception as e:
-        print(e)
-        socket.close()
-      try:
-        def is_good(m):
-          return (int(m[-1] == 0) or (int(m[-1] == 1)))
-        if is_good(message):
-          message_flag = True if int(message[-1]) == 1 else False
-          if message_flag != last:
-            resp = bytes(str(1 if not last else 0), "utf-8")
-            print(f"sending good ack: {resp}")
-          else:
-            resp = bytes(str(1 if last else 0), "utf-8")
-            print(f"sending bad ack: {resp}")
-        else:
-          print("message was bad")
-          resp = bytes(str(1 if last else 0), "utf-8")
-        print(f"responding: {resp}")
-        socket.send(resp)
-      except Exception as e:
-        print(e)
-        socket.close()
-        return
-
-
-
 
   ##################################
   #  send application message
@@ -207,20 +151,39 @@ class CustomTransportProtocol ():
         if protocol == "AlternatingBit":
           window_size = 1
           seq_num = 0
-          sum = 0
-          for i in range(0, sys.getsizeof(segment), MTU):
-            chunk = segment[i:i+MTU]
-            #choice = random.randint(1,3)
+        
+          chunked_list = getChunks(segment, MTU)
+          print(chunked_list)
+          for chunk in chunked_list:
             choice = 1
-            sum += 1
-
             self.send_segment(choice, seq_num, chunk, size)
+        
             ack = self.nw_obj.recv_packet()
+            '''while True:
+              ack = self.nw_obj.recv_packet()
+              try:
+                with ThreadPoolExecutor(max_workers = window_size) as executor:
+                  try:
+                    future = executor.submit(timer, self, choice)
+                    print(f"future = {future}")
+                    response = future.result(timeout = 3)
+                    if ack == seq_num or response != "None":
+                      print("correct ack received")
+                      seq_num = int(not(seq_num))
+                    print(f"ack: {response}")
+                  except concurrent.futures.TimeoutError:
+                    print("Message timed out")
+                  except Exception as e:
+                    print("Unknown exception: {e}")
+              except Exception as e:
+                print(f"Unknown exception {e}")'''
             ack = ack.decode("utf-8")
+            ack = int(ack)
+            seq_num = int(seq_num)
             #ack = self.send_transport_ack(seq_num)
             #ack = self.recv_transport_ack()
-            print(f"ack received is {ack}")
-            print(f"seq num should be {seq_num}")
+            print(f"ack received is {ack} and {type(ack)}")
+            print(f"seq num should be {seq_num} and {type(ack)}")
 
             if (ack != seq_num):
               print(f"wrong ack - {seq_num} expected, {ack} received")
@@ -234,25 +197,43 @@ class CustomTransportProtocol ():
             # else if ack has been received then move onto next chunk
     
         elif protocol == "GoBackN":
+          print("in go back n")
           window_size = 8
           seq_num = 0
           sum = 0
           buffer = []
-          for i in range(0, sys.getsizeof(segment), MTU):
-            chunk = segment[i:i+MTU-1]
-            choice = random.randint(1,3)
-            choice = 1
-            sum += 1
+          acks_recvd = []
+          i = 0
+          chunked_list = getChunks(segment, MTU)
 
-            if seq_num < window_size:
-              #self.send_segment(choice, seq_num, chunk, size)
-              buffer.append(chunk)
+          
+          for chunk in chunked_list:
+            choice = 1
+            # may need to remove this later
+
+            if seq_num >= i and seq_num < i + window_size:
+              self.send_segment(choice, seq_num, chunk, size)
 
             
+            
+            #j = j + 1
+            ack = self.nw_obj.recv_packet()
+
+            ack = ack.decode("utf-8")
+            ack = int(ack)
+            seq_num = int(seq_num)
+
+            print(f"ack received is {ack} and {type(ack)}")
+            print(f"seq num should be {seq_num} and {type(ack)}")
+
+            if (ack != seq_num):
+              print(f"wrong ack - {seq_num} expected, {ack} received")
+            seq_num += 1
             # have a way to tell which seq_num have an ack
             # resend those with timeout 
             # once all have an ack then move window size to next 8 chunks
-
+          print(f"chunked list: {chunked_list}")
+          
         
         elif protocol == "SelectiveRepeat":
           window_size = 8
@@ -286,7 +267,7 @@ class CustomTransportProtocol ():
       # send it to peer. We ignore the length in this assignment
       print ("Custom Transport Protocol::send_segment")
 
-      if protocol == "AlternatingBit":
+      if protocol == "AlternatingBit" or protocol == "GoBackN":
           #print("do alternating bit")
           if choice == 1:
               #print("Send the chunk to the next hop")
@@ -299,6 +280,7 @@ class CustomTransportProtocol ():
               self.nw_obj.send_packet (seq_num, chunk, len)
           elif choice == 3:
               print("Drop chunk")
+              #self.nw_obj.send_packet(seq_num, chunk, len)
 
       #self.nw_obj.send_packet (segment, len)
       
@@ -366,8 +348,3 @@ class CustomTransportProtocol ():
       
     except Exception as e:
       raise e
-
-  
-
-  
-    
