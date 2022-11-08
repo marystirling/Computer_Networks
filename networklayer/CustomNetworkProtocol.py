@@ -158,14 +158,22 @@ class CustomNetworkProtocol ():
       # Here, we simply delegate to our ZMQ socket to send the info
       print ("Custom Network Protocol::send_packet")
       
-     
+      #dest_ip = packet[0]
+      #dest_port = packet[1]
+      #payload = packet[2]
+      #print(f"seq_num is {seq_num} and packet is {packet}")
+      
+      #print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
+      #print(packet)
       packet = packet.decode()
-      packet = str(seq_num) + "!!!" + str(packet)
+      #print(packet)
+      #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
+      str_packet = str(seq_num) + "!!!" + str(packet)
       #print(f"chunk in nw layer is {str_packet}")
 
       if self.config["Application"]["Serialization"] == "json":
         #self.socket.send (bytes(packet, "utf-8"))
-        self.socket.send_multipart([b'', bytes(packet,"utf-8")])
+        self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
       elif self.config["Application"]["Serialization"] == "fbufs":
         self.socket.send (packet)
 
@@ -188,12 +196,39 @@ class CustomNetworkProtocol ():
       packet = self.socket.recv_multipart()[-1]
      # print(packet)
       packet.decode("utf-8")
-      #print(f"packet after recv_packet is {packet}")
+      print(f"packet after recv_packet is {packet}")
       #packet = self.socket.recv ()
       
       return packet
     except Exception as e:
       raise e
+######################################
+  #  send packet ack
+  ######################################
+  def send_packet_ack (self, seq_num, len=0):
+    try:
+      
+      print ("CustomNetworkProtocol::send_packet_ack")
+      #self.socket.send(bytes(str(seq_num), "utf-8"))
+      self.socket.send_multipart([b'', bytes(str(seq_num), "utf-8")])
 
- 
+    except Exception as e:
+      raise e
+
+######################################
+  #  receive packet ack
+  ######################################
+  def recv_packet_ack (self, len=0):
+    try:
+      # @TODO@ Note that this method always receives bytes. So if you want to
+      # convert to json, some mods will be needed here. Use the config.ini file.
+      print ("CustomNetworkProtocol::recv_packet")
+
+      ack = self.socket.recv_multipart()[-1]
+      #ack = self.socket.recv()
+      return ack
+      
+      
+    except Exception as e:
+      raise e
 
