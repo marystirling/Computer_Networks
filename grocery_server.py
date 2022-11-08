@@ -70,6 +70,7 @@ class GroceryOrder ():
       self.grocery_obj.initialize (config, args.addr, args.port)
       
       self.ser_type = config["Application"]["Serialization"]
+      self.protocol = config["Transport"]["TransportProtocol"]
 
     except Exception as e:
       raise e
@@ -98,9 +99,11 @@ class GroceryOrder ():
         print("did we make it in the groc server")
         chunk_sum = 0
         request = ''
+        last = -1
         #while True:
         for i in range(64):
           print("are we trying to receive")
+          print(self.protocol)
           chunk = self.grocery_obj.recv_request ()
           #chunk = chunk.decode("UTF-8")
           #seq_num = chunk.split("~")[-1]
@@ -109,15 +112,32 @@ class GroceryOrder ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
-          #simulate wrong ack number
-          #seq_num = int(not(seq_num))
+          
           print(f"sending ack {seq_num}")
-          self.grocery_obj.send_ack (seq_num)
+          if self.protocol == "AlternatingBit":
+            if seq_num != last:
+              self.grocery_obj.send_ack (seq_num)
+              print("got correct ack")
+              request = request + msg
+              chunk_sum += 1
+              last = seq_num
+            else:
+              self.grocery_obj.send_ack(last)
+              print("got wrong ack")
+            #request = request + msg
+
+          elif self.protocol == "GoBackN":
+            self.health_obj.send_ack(seq_num)
+            request = request + msg
+            chunk_sum += 1
+
+          elif self.protocol == "SelectiveRepeat":
+            self.health_obj.send_ack(seq_num)
+            request = request + msg
+            chunk_sum += 1
           
-          chunk_sum += 1
           
-         
-          request = request + msg
+          #request = request + msg
           if chunk_sum == 64:
             print("received all chunks")
             break
