@@ -137,8 +137,6 @@ class HealthStatus ():
             #request = request + msg
           
           elif self.protocol == "GoBackN":
-            print(f"seq num is {seq_num} and {type(seq_num)}")
-            print(f"last is {last}")
             seq_num = int(seq_num)
             if seq_num == last + 1:
               self.health_obj.send_ack(seq_num)
