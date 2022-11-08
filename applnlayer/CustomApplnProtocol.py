@@ -98,9 +98,9 @@ class CustomApplnProtocol ():
             reader = csv.reader(f)
             for row in reader:
                 if(row[0]== 'H1' and row[1] == '10.0.0.6'):
-                    pass
+                    print("hit")
                 else:
-                    pass
+                    print("miss")
 
       # Now obtain our transport object
       # @TODO
@@ -230,7 +230,7 @@ class CustomApplnProtocol ():
       # transport segments etc and so what we receive from ZMQ is the complete
       # message.
       print ("CustomApplnProtocol::recv_appln_msg")
-
+      print("so now we here")
       request = self.xport_obj.recv_appln_msg ()
       print(request)
 
@@ -290,3 +290,14 @@ class CustomApplnProtocol ():
     except Exception as e:
       raise e
 
+##################################
+  #  receive request
+  ##################################
+  def send_ack (self, seq_num):
+    try:
+      ack_flag = True
+      print ("CustomApplnProtocol::send_ack")
+      self.xport_obj.send_transport_ack (seq_num)
+      
+    except Exception as e:
+      raise e
