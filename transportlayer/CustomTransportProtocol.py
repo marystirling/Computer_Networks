@@ -27,7 +27,7 @@ from networklayer.CustomNetworkProtocol import CustomNetworkProtocol as NWProtoO
 
 FULL_PACKET_SIZE = 1024 # application request packet size of 1024 bytes
 MTU = 16 # maximum transfer unit of 16 bytes
-
+ack_list = []
 
 def GetPaddedSegment(segment):
     segment_size = sys.getsizeof(segment)
@@ -50,6 +50,8 @@ def GetPaddedSegment(segment):
 class CustomTransportProtocol ():
   '''Custom Transport Protocol'''
 
+
+
   ###############################
   # constructor
   ###############################
@@ -60,6 +62,7 @@ class CustomTransportProtocol ():
     self.nw_obj = None # handle to our underlying network layer object
 
     self.config = None
+
     
   ###############################
   # configure/initialize
@@ -97,7 +100,9 @@ class CustomTransportProtocol ():
       raise e  # just propagate it
   
 
- 
+  def prob_drop ():
+    return random.randint(1, 100)
+  
 
 
   def sock_recv():
@@ -112,7 +117,60 @@ class CustomTransportProtocol ():
       return response
 
 
- 
+  def c_alternating_bit(self, socket):
+    print("sending with alternating bit protocol")
+    flag = True
+    sock_recv = 0
+    for i in range(self.iters):
+      try:
+        message = f"m={i}f={1 if flag else 0}"
+        socket.send(bytes(message), "utf-8")
+      except Exception as e:
+        print("error when sending message in c_alternating_bit")
+      try:
+        with concurrent.futures.ThreadPoolExecutor (max_workers=1) as executor:
+          future = executor.submit(sock_recv, socket)
+          print("future: {future}")
+          response = future.result(timeout=self.timeout)
+          print(f"response: {response}")
+          ack = True if response == b'1' else False
+          if flag == ack:
+            print("response ack our message")
+            flag = not flag
+      except Exception as e:
+        print("mesage timed out")
+    return None
+
+  def s_alternating_bit(socket):
+    print("using alternating bit protocol")
+    last = False
+    while True:
+      try:
+        message = str(socket.recv(), "utf-8")
+        print(f"received: {message}")
+      except Exception as e:
+        print(e)
+        socket.close()
+      try:
+        def is_good(m):
+          return (int(m[-1] == 0) or (int(m[-1] == 1)))
+        if is_good(message):
+          message_flag = True if int(message[-1]) == 1 else False
+          if message_flag != last:
+            resp = bytes(str(1 if not last else 0), "utf-8")
+            print(f"sending good ack: {resp}")
+          else:
+            resp = bytes(str(1 if last else 0), "utf-8")
+            print(f"sending bad ack: {resp}")
+        else:
+          print("message was bad")
+          resp = bytes(str(1 if last else 0), "utf-8")
+        print(f"responding: {resp}")
+        socket.send(resp)
+      except Exception as e:
+        print(e)
+        socket.close()
+        return
 
 
 
@@ -124,7 +182,7 @@ class CustomTransportProtocol ():
 
     protocol = self.config["Transport"]["TransportProtocol"]
       
-    
+    print(f"Role is: {self.role}")
     try:
       # @TODO@ Implement this
       # What we should get here is a serialized message from the application
@@ -157,10 +215,16 @@ class CustomTransportProtocol ():
             sum += 1
 
             self.send_segment(choice, seq_num, chunk, size)
-            
-            ack = self.send_transport_ack(seq_num)
+            ack = self.nw_obj.recv_packet()
+            ack = ack.decode("utf-8")
+            #ack = self.send_transport_ack(seq_num)
+            #ack = self.recv_transport_ack()
             print(f"ack received is {ack}")
-            #time.sleep(1)
+            print(f"seq num should be {seq_num}")
+
+            if (ack != seq_num):
+              print(f"wrong ack - {seq_num} expected, {ack} received")
+            #time.sleep(5)
             seq_num = int(not(seq_num))
             
             # sending one segment at a time
@@ -225,7 +289,9 @@ class CustomTransportProtocol ():
       if protocol == "AlternatingBit":
           #print("do alternating bit")
           if choice == 1:
-              print("Send the chunk to the next hop")
+              #print("Send the chunk to the next hop")
+              #print(f"what i am sending to network layer is {sys.getsizeof(chunk)}")
+              #print(chunk)
               self.nw_obj.send_packet (seq_num, chunk, len)
           elif choice == 2:
               print("Delay sending chunk to the next hop")
@@ -253,15 +319,16 @@ class CustomTransportProtocol ():
       # For this assignment, we do not care about all these things.
       print ("Custom Transport Protocol::recv_appln_msg")
       appln_msg = self.recv_segment ()
-
+      #print(f"now we have {appln_msg}")
       full_msg = []
-
+      #appln_msg = []
       buffer = []
 
 
       if self.config["Transport"]["TransportProtocol"] == "AlternatingBit":
           print("alternating bit protocol")
           
+      print(f"appln message: {appln_msg}")
       return appln_msg
     
     except Exception as e:
@@ -292,18 +359,30 @@ class CustomTransportProtocol ():
   #  send transport layer ack
   ######################################
   def send_transport_ack (self, seq_num):
-    try:
-      # receive a segment. In future assignments, we may be asking for
-      # a pipeline of segments.
-      #
-      # For this assignment, we do not care about all these things.
-      print ("Custom Transport Protocol::semd_transport_ack")
-
-      return seq_num
     
+    try:
+      print ("Custom Transport Protocol::send_transport_ack")
+      self.nw_obj.send_packet_ack(seq_num)
+      
+    except Exception as e:
+      raise e
+
+  
+  
+    
+  ######################################
+  #  receive transport layer ack
+  ######################################
+  def recv_transport_ack (self):
+    try:
+     
+      print ("Custom Transport Protocol::recv_transport_ack")
+
+      seq_num = self.nw_obj.recv_packet_ack()
+      return seq_num
+      
     except Exception as e:
       raise e
 
   
     
- 
