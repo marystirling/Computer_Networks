@@ -95,11 +95,12 @@ class GroceryOrder ():
         #request = self.health_obj.recv_request ()
         #print ("Received request: {}".format (request))
 
+        print("did we make it in the groc server")
         chunk_sum = 0
         request = ''
         #while True:
         for i in range(64):
-
+          print("are we trying to receive")
           chunk = self.grocery_obj.recv_request ()
           #chunk = chunk.decode("UTF-8")
           #seq_num = chunk.split("~")[-1]
@@ -108,11 +109,13 @@ class GroceryOrder ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
+          #simulate wrong ack number
+          #seq_num = int(not(seq_num))
           print(f"sending ack {seq_num}")
           self.grocery_obj.send_ack (seq_num)
           
           chunk_sum += 1
-         
+          
          
           request = request + msg
           if chunk_sum == 64:
@@ -128,7 +131,7 @@ class GroceryOrder ():
         
         flag_split, dest_ip, dest_port, payload = request.split("~")
 
-        #print ("Received request: {}".format (request))
+        print ("Received request: {}".format (request))
         #request = bytes(request, "utf-8")
         resp = self.gen_response_msg()
         #request = payload

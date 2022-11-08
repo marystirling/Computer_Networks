@@ -119,6 +119,10 @@ class HealthStatus ():
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
+
+          #sending wrong ack:
+          #seq_num = int(not(seq_num))
+
           print(f"sending ack {seq_num}")
           self.health_obj.send_ack (seq_num)
 
@@ -129,7 +133,7 @@ class HealthStatus ():
             print("received all chunks")
             break
         
-        #print(f"appended {request}")
+        print(f"appended {request}")
 
 
 
