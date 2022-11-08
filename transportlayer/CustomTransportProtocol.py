@@ -368,21 +368,6 @@ class CustomTransportProtocol ():
       raise e
 
   
-  
-    
-  ######################################
-  #  receive transport layer ack
-  ######################################
-  def recv_transport_ack (self):
-    try:
-     
-      print ("Custom Transport Protocol::recv_transport_ack")
-
-      seq_num = self.nw_obj.recv_packet_ack()
-      return seq_num
-      
-    except Exception as e:
-      raise e
 
   
     
