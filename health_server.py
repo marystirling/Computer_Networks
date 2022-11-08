@@ -111,6 +111,7 @@ class HealthStatus ():
         chunk_sum = 0
         request = ''
         last = -1
+        #last = 0
         #while True:
         for i in range(64):
           chunk = self.health_obj.recv_request ()
@@ -136,9 +137,18 @@ class HealthStatus ():
             #request = request + msg
           
           elif self.protocol == "GoBackN":
-            self.health_obj.send_ack(seq_num)
-            request = request + msg
-            chunk_sum += 1
+            print(f"seq num is {seq_num} and {type(seq_num)}")
+            print(f"last is {last}")
+            seq_num = int(seq_num)
+            if seq_num == last + 1:
+              self.health_obj.send_ack(seq_num)
+              print("got correct ack")
+              request = request + msg
+              chunk_sum += 1
+              last = seq_num
+            else:
+              self.health_obj.send_ack(last)
+              print("got wrong ack")
 
           elif self.protocol == "SelectiveRepeat":
             self.health_obj.send_ack(seq_num)

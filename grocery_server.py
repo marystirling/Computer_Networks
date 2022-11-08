@@ -127,9 +127,17 @@ class GroceryOrder ():
             #request = request + msg
 
           elif self.protocol == "GoBackN":
-            self.health_obj.send_ack(seq_num)
-            request = request + msg
-            chunk_sum += 1
+            seq_num = int(seq_num)
+            if seq_num == last + 1:
+              self.grocery_obj.send_ack(seq_num)
+              print("got correct ack")
+              request = request + msg
+              chunk_sum += 1
+              last = seq_num
+            else:
+              self.grocery_obj.send_ack(last)
+              print("got wrong ack")
+            
 
           elif self.protocol == "SelectiveRepeat":
             self.health_obj.send_ack(seq_num)
