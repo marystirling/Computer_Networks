@@ -17,6 +17,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import random
 import concurrent.futures
 from threading import Event
+import heapq
+import itertools
 
 # add to the python system path so that packages can be found relative to
 # this directory
@@ -126,7 +128,7 @@ class CustomTransportProtocol ():
 
     protocol = self.config["Transport"]["TransportProtocol"]
       
-    print(f"Role is: {self.role}")
+    
     try:
       # @TODO@ Implement this
       # What we should get here is a serialized message from the application
@@ -157,7 +159,8 @@ class CustomTransportProtocol ():
           for chunk in chunked_list:
             choice = 1
             self.send_segment(choice, seq_num, chunk, size)
-        
+            print(f"chunk sending is {chunk}")
+            #time.sleep(5)
             ack = self.nw_obj.recv_packet()
             '''while True:
               ack = self.nw_obj.recv_packet()
@@ -199,29 +202,113 @@ class CustomTransportProtocol ():
         elif protocol == "GoBackN":
           print("in go back n")
           window_size = 8
+          base = 0
+          next_seq_num = 0
           seq_num = 0
-          sum = 0
+          choice = 1
           buffer = []
           acks_recvd = []
-          i = 0
+          heapq.heapify(acks_recvd)
+          j = 0 # chunk index for list
           chunked_list = getChunks(segment, MTU)
+          #count = 0
+          wrong_acks = 0
+          flag_break = False
+          while True:
+            if flag_break:
+              break
+            j = j - wrong_acks
+            print(f"wrong acks is {wrong_acks}")
+            wrong_acks = 0
+            print(f"what is my seq_num here: {seq_num}")
+            print(f"what is my j here {j} and base is {base}")
+            #time.sleep(5)
+            acks_recvd = []
+            count_window = 0
+            for i in range(base, base + window_size):
+              count_window = count_window + 1
+              chunk = chunked_list[j]
+              print(f"chunk sending is {chunk}")
+              print(f"with seq num {seq_num}")
+              self.send_segment(choice, seq_num, chunk, size)
+              print(f"sending chunk {chunk} with seq_num {seq_num}")
+              seq_num = seq_num + 1
+              j = j + 1
+              window_size = count_window
+              print(f"count window is {count_window} and {window_size}")
+              if j == 64:
+                break
+            #for i in range(i, i + window_size):
+            count = 0
+            print(f"window size is now {window_size}")
+            while True:
+              ack = self.nw_obj.recv_packet()
+              ack = ack.decode("utf-8")
+              ack = int(ack)
+             
+              heapq.heappush(acks_recvd, ack)
+              print(f"received ack here as {ack}")
+              count += 1
+              if count == window_size:
+                break
+            '''for i in range(i, i + window_size):
+              ack = self.nw_obj.recv_packet()
+              ack = ack.decode("utf-8")
+              ack = int(ack)
+              heapq.heappush(acks_recvd, ack)
+              print(f"received ack: {ack}")'''
+            
+            expected = list(range(0, window_size))
+            print(f"expected is: {expected}")
+            
+            matching = []
+            matching = list(itertools.zip_longest(expected, acks_recvd))
+            print(f"matching: {matching}")
+            end = window_size - 1
+            print(f"end should be {end}")
+            for exp, got in matching:
+              if exp != got:
+                base = exp
+                print(f"missed ack: {exp}")
+                #seq_num = exp
+                seq_num = 0
+                #time.sleep(5)
+                slots_left = window_size - exp
+                wrong_acks = slots_left
+                #wrong_acks += 1 
+                print(f"wrong acks is {wrong_acks}")
+                #time.sleep(5)
+                break
+              else:
+                base = exp
+                
+                
+                
+                print(f"new base is {base}")
+                if exp == end:
+                  base += 1
+                  seq_num = 0 
+                  #j = j - 1
+                  print(f"got full window, base = {base}")
+                  print(f"the seq_num is now {seq_num}")
+                  print(f"the j now is: {j}")
+                  if j == 64:
+                    flag_break = True
+                  #time.sleep(2)
+
 
           
-          for chunk in chunked_list:
-            choice = 1
-            # may need to remove this later
 
-            if seq_num >= i and seq_num < i + window_size:
-              self.send_segment(choice, seq_num, chunk, size)
+
+            
 
             
             
-            #j = j + 1
-            ack = self.nw_obj.recv_packet()
+         
 
-            ack = ack.decode("utf-8")
-            ack = int(ack)
-            seq_num = int(seq_num)
+          '''ack = ack.decode("utf-8")
+          ack = int(ack)
+          seq_num = int(seq_num)
 
             print(f"ack received is {ack} and {type(ack)}")
             print(f"seq num should be {seq_num} and {type(ack)}")
@@ -232,7 +319,7 @@ class CustomTransportProtocol ():
             # have a way to tell which seq_num have an ack
             # resend those with timeout 
             # once all have an ack then move window size to next 8 chunks
-          print(f"chunked list: {chunked_list}")
+          print(f"chunked list: {chunked_list}")'''
           
         
         elif protocol == "SelectiveRepeat":
@@ -246,12 +333,7 @@ class CustomTransportProtocol ():
 
         
     
-      choice = 1
-      print(f"The size of my packet in transport layer is: {sys.getsizeof(segment)}")
-      print(f" final choice is: {choice}")
-      #print(segment)
-      #print(f"sum is {sum}")
-      #self.send_segment(choice, seq_num, segment, size)
+      
 
     except Exception as e:
       raise e
@@ -268,8 +350,9 @@ class CustomTransportProtocol ():
       print ("Custom Transport Protocol::send_segment")
 
       if protocol == "AlternatingBit" or protocol == "GoBackN":
-          #print("do alternating bit")
+          print("do alternating bit")
           if choice == 1:
+              print(f"sending chunk: {chunk} with seq_num {seq_num}")
               #print("Send the chunk to the next hop")
               #print(f"what i am sending to network layer is {sys.getsizeof(chunk)}")
               #print(chunk)
