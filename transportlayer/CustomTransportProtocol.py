@@ -119,6 +119,15 @@ class CustomTransportProtocol ():
     except Exception as e:
       raise e  # just propagate it
   
+  #################################
+  # send application message RESPONSE
+  ################################
+  def send_appln_msg_response(self, flag_split, dest_ip, dest_port, payload, size):
+    print("Custom Transport Protocol::send_appln_msg_response")
+    payload = bytes(payload, "utf-8")
+    self.send_segment(1, 0, payload, size)
+
+
 
 
   ##################################
@@ -356,7 +365,7 @@ class CustomTransportProtocol ():
         self.nw_obj.send_packet(seq_num, chunk, len)
       elif choice == 2:
           print("Choice 2: Delay sending chunk to the next hop")
-          time.sleep(1) # delay for random integer from 1 to 10 
+          time.sleep(1) 
           self.nw_obj.send_packet (seq_num, chunk, len)
       elif choice == 3:
           print("Choice 3: Drop chunk")
@@ -366,6 +375,15 @@ class CustomTransportProtocol ():
       
     except Exception as e:
       raise e
+
+
+  ######################################
+  #  receive application-level message
+  ######################################
+  def recv_appln_msg_response (self, len=0):
+    print("Custom Transport Protocol:: recv_appln_msg_response")
+    segment = self.nw_obj.recv_packet(len)
+    return segment
 
   ######################################
   #  receive application-level message
@@ -380,17 +398,87 @@ class CustomTransportProtocol ():
       #
       # For this assignment, we do not care about all these things.
       print ("Custom Transport Protocol::recv_appln_msg")
-      appln_msg = self.recv_segment ()
-      #print(f"now we have {appln_msg}")
-      full_msg = []
-      #appln_msg = []
-      buffer = []
+      #appln_msg = self.recv_segment ()
+      self.protocol = self.config["Transport"]["TransportProtocol"]
 
-
-      if self.config["Transport"]["TransportProtocol"] == "AlternatingBit":
-          print("alternating bit protocol")
+      chunk_sum = 0
+      request = ''
+      last = -1
+      #i = 0
+      #last = 0
+      while True:
+      #for i in range(64):
+        chunk = self.recv_segment ()
+        #chunk = chunk.decode("UTF-8")
+        #seq_num = chunk.split("~")[-1]
+        
+        chunk = chunk.decode("UTF-8")
+        chunk = chunk.split('!!!')
+        seq_num = chunk[0]
+        msg = chunk[-1]
+        print(f"chunk sum is {chunk_sum}")
+        #start_i = i
+        
+        print(f"sending ack {seq_num}")
+        if self.protocol == "AlternatingBit":
+          if seq_num != last:
+            self.send_transport_ack (seq_num)
+            print("got correct ack")
+            request = request + msg
+            chunk_sum += 1
+            last = seq_num
+            #i = i + 1
+          else:
+            self.send_transport_ack(last)
+            print("got wrong ack")
+          #request = request + msg
+        
+        elif self.protocol == "GoBackN":
+          seq_num = int(seq_num)
+          print(f"received packet with seq_num  {seq_num}")
+          #print(f" i iteration right now is {i}")
+          #time.sleep(4)
           
-      print(f"appln message: {appln_msg}")
+          if seq_num == last + 1:
+            
+            self.send_transport_ack(seq_num)
+            print("got correct ack")
+            request = request + msg
+            chunk_sum = chunk_sum + 1
+            last = seq_num
+            print(f"last here is {last}")
+            if last != 7:
+              print(f"do we ever go in here")
+              last = seq_num
+            elif last == 7:
+              print(f"we reached the end so the new last is: {last}")
+              last = -1
+          else:
+            self.send_transport_ack(last)
+            #i = start_i - 1
+            #print(f"start_i is {start_i} and new i is {i}")
+            #time.sleep(5)
+            print("got wrong ack")
+            print(f"chunk_sum = {chunk_sum}")
+
+        elif self.protocol == "SelectiveRepeat":
+          self.health_obj.send_ack(seq_num)
+          request = request + msg
+          chunk_sum += 1
+
+        
+        if chunk_sum == 64:
+          print("received all chunks")
+          break
+      
+      print(f"appended {request}")
+
+
+
+      appln_msg = request.split("###")[0]
+
+
+
       return appln_msg
     
     except Exception as e:
