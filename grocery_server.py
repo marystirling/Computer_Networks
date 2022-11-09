@@ -128,27 +128,28 @@ class GroceryOrder ():
 
           elif self.protocol == "GoBackN":
             seq_num = int(seq_num)
+            print(f"received packet with seq_num  {seq_num}")
             if seq_num == last + 1:
               self.grocery_obj.send_ack(seq_num)
               print("got correct ack")
               request = request + msg
               chunk_sum += 1
               last = seq_num
+              print(f"last here is {last}")
+              if last != 7:
+                print(f"do we ever go in here")
+                last = seq_num
+              elif last == 7:
+                print(f"we reached the end so the new last is: {last}")
+                last = -1
             else:
               self.grocery_obj.send_ack(last)
               print("got wrong ack")
-            
 
           elif self.protocol == "SelectiveRepeat":
-            self.health_obj.send_ack(seq_num)
+            self.grocery_obj.send_ack(seq_num)
             request = request + msg
             chunk_sum += 1
-          
-          
-          #request = request + msg
-          if chunk_sum == 64:
-            print("received all chunks")
-            break
         
         print(f"full request: {request}")
 
