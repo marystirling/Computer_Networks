@@ -31,16 +31,17 @@ FULL_PACKET_SIZE = 1024 # application request packet size of 1024 bytes
 MTU = 16 # maximum transfer unit of 16 bytes
 ack_list = []
 
-def timer(self, choice):
+def timer(self, choice, socket):
     response = None
     print("do i ever enter timer")
     try:
       if choice == 3:
         print("sleeping to simulate drop")
-        time.sleep(10)
+        time.sleep(5)
         print("somehow finished sleeping")
       else:
         response = 1
+        response = socket.recv_packet()
     except Exception as e:
       print(e)
     finally:
@@ -162,34 +163,46 @@ class CustomTransportProtocol ():
         if protocol == "AlternatingBit":
           window_size = 1
           seq_num = 0
-        
+          j = 0
           chunked_list = getChunks(segment, MTU)
           print(chunked_list)
-          for chunk in chunked_list:
-            #choice = 2
-            choice = random.randint(1,2)
+          flag_break = False
+          while True:
+            if flag_break:
+              break
+          #for chunk in chunked_list:
+          
+            chunk = chunked_list[j]
+            choice = random.randint(1,3)
+         
             self.send_segment(choice, seq_num, chunk, size)
             print(f"chunk sending is {chunk}")
+            try:
+              with ThreadPoolExecutor(max_workers = window_size) as executor:
+                try:
+                  future = executor.submit(timer, self, choice, self.nw_obj)
+                  print(f"future = {future}")
+                  response = future.result(timeout = 3)
+                  response = int(response)
+                  if response == seq_num:
+                    print("correct ack received")
+                    seq_num = int(not(seq_num))
+                    j += 1
+                    if j == 64:
+                      flag_break = True
+                  print(f"ack: {response}")
+                except concurrent.futures.TimeoutError:
+                  print("Message timed out")
+                  self.send_segment(choice, seq_num, chunk, size)
+                except Exception as e:
+                  print("Unknown exception: {e}")
+            except Exception as e:
+              print(f"Unknown exception {e}")
             #time.sleep(5)
-            ack = self.nw_obj.recv_packet()
-            '''while True:
-              ack = self.nw_obj.recv_packet()
-              try:
-                with ThreadPoolExecutor(max_workers = window_size) as executor:
-                  try:
-                    future = executor.submit(timer, self, choice)
-                    print(f"future = {future}")
-                    response = future.result(timeout = 3)
-                    if ack == seq_num or response != "None":
-                      print("correct ack received")
-                      seq_num = int(not(seq_num))
-                    print(f"ack: {response}")
-                  except concurrent.futures.TimeoutError:
-                    print("Message timed out")
-                  except Exception as e:
-                    print("Unknown exception: {e}")
-              except Exception as e:
-                print(f"Unknown exception {e}")'''
+            #ack = self.nw_obj.recv_packet()
+          '''while True:
+            #ack = self.nw_obj.recv_packet()
+            
             ack = ack.decode("utf-8")
             ack = int(ack)
             seq_num = int(seq_num)
@@ -201,7 +214,7 @@ class CustomTransportProtocol ():
             if (ack != seq_num):
               print(f"wrong ack - {seq_num} expected, {ack} received")
             #time.sleep(5)
-            seq_num = int(not(seq_num))
+            seq_num = int(not(seq_num))'''
             
             # sending one segment at a time
             #self.send_segment(choice, seq_num, chunk, size)
