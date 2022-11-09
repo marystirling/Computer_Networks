@@ -94,70 +94,10 @@ class GroceryOrder ():
       # The grocery order server will run forever
       while True:
         
-        chunk_sum = 0
-        request = ''
-        last = -1
-        while True:
-        #for i in range(64):
-          chunk = self.grocery_obj.recv_request ()
-
-          chunk = chunk.decode("UTF-8")
-          chunk = chunk.split('!!!')
-          seq_num = chunk[0]
-          msg = chunk[-1]
+        request = self.grocery_obj.recv_request ()
+        print ("Received request: {}".format (request))
 
 
-          print(f"sending ack {seq_num}")
-          if self.protocol == "AlternatingBit":
-            if seq_num != last:
-              self.grocery_obj.send_ack (seq_num)
-              print("got correct ack")
-              request = request + msg
-              chunk_sum += 1
-              last = seq_num
-
-            else:
-              self.grocery_obj.send_ack(last)
-              print("got wrong ack")
-      
-          
-          elif self.protocol == "GoBackN":
-            seq_num = int(seq_num)
-            print(f"received packet with seq_num  {seq_num}")
-            
-            if seq_num == last + 1:
-              self.grocery_obj.send_ack(seq_num)
-              print("got correct ack")
-              request = request + msg
-              chunk_sum = chunk_sum + 1
-              last = seq_num
-
-              if last != 7:
-                last = seq_num
-              elif last == 7:
-                print(f"we reached the end so the new last is: {last}")
-                last = -1
-            else:
-              self.grocery_obj.send_ack(last)
-              print("got wrong ack")
-
-
-          elif self.protocol == "SelectiveRepeat":
-            self.grocery_obj.send_ack(seq_num)
-            request = request + msg
-            chunk_sum += 1
-
-          
-          if chunk_sum == 64:
-            print("received all chunks")
-            break
-        
-        print(f"appended {request}")
-
-
-
-        request = request.split("###")[0]
-        
         flag_split, dest_ip, dest_port, payload = request.split("~")
 
         print ("Received request: {}".format (request))
@@ -165,6 +105,7 @@ class GroceryOrder ():
         resp = self.gen_response_msg()
         #request = payload
         resp.type = resp.msg["type"] = 3
+        
         if (self.ser_type == "json"):
             print ("deserialize the message")
             msg_d = sz_json.deserialize (payload)
