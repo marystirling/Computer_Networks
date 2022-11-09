@@ -11,6 +11,7 @@
 # import the needed packages
 import os     # for OS functions
 import sys    # for syspath and system exception
+import time
 
 # add to the python system path so that packages can be found relative to
 # this directory
@@ -165,6 +166,7 @@ class CustomNetworkProtocol ():
       
       #print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
       #print(packet)
+      print(packet)
       packet = packet.decode()
       #print(packet)
       #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
@@ -197,6 +199,7 @@ class CustomNetworkProtocol ():
      # print(packet)
       packet.decode("utf-8")
       print(f"packet after recv_packet is {packet}")
+      #time.sleep(1)
       #packet = self.socket.recv ()
       
       return packet
