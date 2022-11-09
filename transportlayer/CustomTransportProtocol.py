@@ -157,7 +157,8 @@ class CustomTransportProtocol ():
           chunked_list = getChunks(segment, MTU)
           print(chunked_list)
           for chunk in chunked_list:
-            choice = 1
+            #choice = 2
+            choice = random.randint(1,2)
             self.send_segment(choice, seq_num, chunk, size)
             print(f"chunk sending is {chunk}")
             #time.sleep(5)
@@ -205,7 +206,8 @@ class CustomTransportProtocol ():
           base = 0
           next_seq_num = 0
           seq_num = 0
-          choice = 1
+          #choice = 1
+          #choice = random.randint(1,2)
           buffer = []
           acks_recvd = []
           heapq.heapify(acks_recvd)
@@ -228,6 +230,7 @@ class CustomTransportProtocol ():
             for i in range(base, base + window_size):
               count_window = count_window + 1
               chunk = chunked_list[j]
+              choice = random.randint(1,2)
               print(f"chunk sending is {chunk}")
               print(f"with seq num {seq_num}")
               self.send_segment(choice, seq_num, chunk, size)
@@ -348,22 +351,16 @@ class CustomTransportProtocol ():
       # For this assignment, we ask our dummy network layer to
       # send it to peer. We ignore the length in this assignment
       print ("Custom Transport Protocol::send_segment")
-
-      if protocol == "AlternatingBit" or protocol == "GoBackN":
-          print("do alternating bit")
-          if choice == 1:
-              print(f"sending chunk: {chunk} with seq_num {seq_num}")
-              #print("Send the chunk to the next hop")
-              #print(f"what i am sending to network layer is {sys.getsizeof(chunk)}")
-              #print(chunk)
-              self.nw_obj.send_packet (seq_num, chunk, len)
-          elif choice == 2:
-              print("Delay sending chunk to the next hop")
-              time.sleep(random.randint(1,3)) # delay for random integer from 1 to 10 
-              self.nw_obj.send_packet (seq_num, chunk, len)
-          elif choice == 3:
-              print("Drop chunk")
-              #self.nw_obj.send_packet(seq_num, chunk, len)
+      if choice == 1:
+        print("Choice 1: Send the chunk to the next hop")
+        self.nw_obj.send_packet(seq_num, chunk, len)
+      elif choice == 2:
+          print("Choice 2: Delay sending chunk to the next hop")
+          time.sleep(1) # delay for random integer from 1 to 10 
+          self.nw_obj.send_packet (seq_num, chunk, len)
+      elif choice == 3:
+          print("Choice 3: Drop chunk")
+          #self.nw_obj.send_packet(seq_num, chunk, len)
 
       #self.nw_obj.send_packet (segment, len)
       
