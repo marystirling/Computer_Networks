@@ -145,10 +145,7 @@ class HealthStatus ():
             print(f"received packet with seq_num  {seq_num}")
             #print(f" i iteration right now is {i}")
             #time.sleep(4)
-            #if seq_num == 1:
-              #  print("do we go in here")
-              #seq_num = 0
-              #time.sleep(5)
+            
             if seq_num == last + 1:
               
               self.health_obj.send_ack(seq_num)

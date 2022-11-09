@@ -85,34 +85,28 @@ class GroceryOrder ():
 
     return resp_msg
   
-  ##################################
+   ##################################
   # Driver program
   ##################################
   def driver (self):
+    print("in grocery_server driver")
     try:
-      # The health status server will run forever
+      # The grocery order server will run forever
       while True:
         
-        #request = self.health_obj.recv_request ()
-        #print ("Received request: {}".format (request))
-
-        print("did we make it in the groc server")
         chunk_sum = 0
         request = ''
         last = -1
-        #while True:
-        for i in range(64):
-          print("are we trying to receive")
-          print(self.protocol)
+        while True:
+        #for i in range(64):
           chunk = self.grocery_obj.recv_request ()
-          #chunk = chunk.decode("UTF-8")
-          #seq_num = chunk.split("~")[-1]
-         
+
           chunk = chunk.decode("UTF-8")
           chunk = chunk.split('!!!')
           seq_num = chunk[0]
           msg = chunk[-1]
-          
+
+
           print(f"sending ack {seq_num}")
           if self.protocol == "AlternatingBit":
             if seq_num != last:
@@ -121,23 +115,24 @@ class GroceryOrder ():
               request = request + msg
               chunk_sum += 1
               last = seq_num
+
             else:
               self.grocery_obj.send_ack(last)
               print("got wrong ack")
-            #request = request + msg
-
+      
+          
           elif self.protocol == "GoBackN":
             seq_num = int(seq_num)
             print(f"received packet with seq_num  {seq_num}")
+            
             if seq_num == last + 1:
               self.grocery_obj.send_ack(seq_num)
               print("got correct ack")
               request = request + msg
-              chunk_sum += 1
+              chunk_sum = chunk_sum + 1
               last = seq_num
-              print(f"last here is {last}")
+
               if last != 7:
-                print(f"do we ever go in here")
                 last = seq_num
               elif last == 7:
                 print(f"we reached the end so the new last is: {last}")
@@ -146,13 +141,18 @@ class GroceryOrder ():
               self.grocery_obj.send_ack(last)
               print("got wrong ack")
 
+
           elif self.protocol == "SelectiveRepeat":
             self.grocery_obj.send_ack(seq_num)
             request = request + msg
             chunk_sum += 1
-        
-        print(f"full request: {request}")
 
+          
+          if chunk_sum == 64:
+            print("received all chunks")
+            break
+        
+        print(f"appended {request}")
 
 
 
@@ -165,7 +165,6 @@ class GroceryOrder ():
         resp = self.gen_response_msg()
         #request = payload
         resp.type = resp.msg["type"] = 3
-
         if (self.ser_type == "json"):
             print ("deserialize the message")
             msg_d = sz_json.deserialize (payload)
