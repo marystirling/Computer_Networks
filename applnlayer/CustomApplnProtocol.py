@@ -197,6 +197,7 @@ class CustomApplnProtocol ():
               buf = sz_json.serialize (response)
 
               response.__str__()
+             
               
           elif self.ser_type == SerializationType.FBUFS:
               print ("serialize the message")
@@ -211,7 +212,8 @@ class CustomApplnProtocol ():
       
       
       print ("CustomApplnProtocol::send_response")
-      self.xport_obj.send_appln_msg (flag_split, dest_ip, dest_port, buf, len (buf))
+      #self.xport_obj.send_appln_msg (flag_split, dest_ip, dest_port, buf, len (buf))
+      self.xport_obj.send_appln_msg_response(flag_split, dest_ip, dest_port, buf, len(buf))
     except Exception as e:
       raise e
 
@@ -255,7 +257,7 @@ class CustomApplnProtocol ():
       
 
       print ("CustomApplnProtocol::recv_response")
-      response = self.xport_obj.recv_appln_msg ()
+      response = self.xport_obj.recv_appln_msg_response ()
 
       
       response = response.decode("Utf-8")
@@ -263,17 +265,18 @@ class CustomApplnProtocol ():
       response = response[-1]
       print(f"response now is: {response}")
 
-      response = response.split("###")[0]
+      #response = response.split("###")[0]
         
-      flag_split, dest_ip, dest_port, payload = response.split("~")
+      #flag_split, dest_ip, dest_port, payload = response.split("~")
 
       #flag_split, dest_ip, dest_port, payload = response.split("~")
 
       
       if self.ser_type == SerializationType.JSON:
               print ("deserialize the message")
+             
 
-              response_msg = sz_json.deserialize (payload)
+              response_msg = sz_json.deserialize (response)
  
               response.__str__()
               
