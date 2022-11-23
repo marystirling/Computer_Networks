@@ -23,6 +23,8 @@ import configparser # for configuration parsing
 import zmq # actually not needed here but we are printing zmq version and hence needed
 import random
 import json
+import netifaces as ni
+
 # add to the python system path so that the following packages can be found
 # relative to this directory
 sys.path.insert (0, os.getcwd ())
@@ -90,10 +92,15 @@ class GroceryOrder ():
   ##################################
   def driver (self):
     print("in grocery_server driver")
+
+    intfs = ni.interfaces()
+    host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
+    print(f"host_ip is {host_ip}")
+
     try:
       # The grocery order server will run forever
       while True:
-        
+        print("do we get here for the error")
         request = self.grocery_obj.recv_request ()
         print ("Received request: {}".format (request))
 
@@ -144,7 +151,9 @@ def parseCmdLineArgs ():
   parser.add_argument ("-c", "--config", default="config.ini", help="configuration file (default: config.ini")
   parser.add_argument ("-a", "--addr", default="*", help="Interface we are accepting connections on (default: all)")
   parser.add_argument ("-p", "--port", type=int, default=5555, help="Port the health status server is listening on (default: 5555)")
- #parser.add_argument ("-fp", "--finalport", type=int, default=5555, help="Final destination port (default: 5555)")
+  #parser.add_argument ("-p", "--port", type=int, default=7777, help="Port the health status server is listening on (default: 5555)")
+  
+  parser.add_argument ("-fp", "--finalport", type=int, default=5555, help="Final destination port (default: 5555)")
   #parser.add_argument ("-fip", "--finalip", default ="*", help = "Final destination ip (default: all)")
   
   args = parser.parse_args ()

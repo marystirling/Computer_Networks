@@ -34,6 +34,8 @@ from applnlayer.ApplnMessageTypes import ResponseMessage
 
 from enum import Enum
 
+import netifaces as ni
+
 
 import serialize_flatbuf as sz_fb
 import serialize_json as sz_json
@@ -100,6 +102,13 @@ class HealthStatus ():
   ##################################
   def driver (self):
     print("in health_server driver")
+
+    intfs = ni.interfaces()
+    host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
+    print(f"host_ip is {host_ip}")
+    #hostname = ip_to_hostname(host_ip)
+  
+
     try:
       # The health status server will run forever
       while True:
@@ -108,8 +117,9 @@ class HealthStatus ():
         print ("Received request: {}".format (request))
 
         flag_split, dest_ip, dest_port, payload = request.split("~")
-
+        
         print ("Received request: {}".format (request))
+        #payload = request
         #request = bytes(request, "utf-8")
         resp = self.gen_response_msg()
         #request = payload
@@ -156,6 +166,7 @@ def parseCmdLineArgs ():
   parser.add_argument ("-c", "--config", default="config.ini", help="configuration file (default: config.ini")
   parser.add_argument ("-a", "--addr", default="*", help="Interface we are accepting connections on (default: all)")
   parser.add_argument ("-p", "--port", type=int, default=7777, help="Port the health status server is listening on (default: 7777)")
+  #parser.add_argument ("-p", "--port", type=int, default=5555, help="Port the health status server is listening on (default: 7777)")
  
   
   args = parser.parse_args ()
