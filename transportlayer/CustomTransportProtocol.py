@@ -33,12 +33,12 @@ ack_list = []
 
 def timer(self, choice, socket):
     response = None
-    print("do i ever enter timer")
+    
     try:
       if choice == 3:
-        print("sleeping to simulate drop")
-        time.sleep(5)
-        print("somehow finished sleeping")
+     
+        time.sleep(2)
+     
       else:
         response = 1
         response = socket.recv_packet()
@@ -52,8 +52,7 @@ def GetPaddedSegment(segment):
     added_bits = FULL_PACKET_SIZE - segment_size
     need_to_add = bytes(added_bits)
     segment = segment + need_to_add
-    #segment_size = sys.getsizeof(segment)
-    #print(f"segment size: {segment_size}")
+ 
     return segment
 
 def getChunks(segment, MTU):
@@ -126,7 +125,7 @@ class CustomTransportProtocol ():
   def send_appln_msg_response(self, flag_split, dest_ip, dest_port, payload, size):
     print("Custom Transport Protocol::send_appln_msg_response")
     payload = bytes(payload, "utf-8")
-    self.send_segment(1, 0, payload, size)
+    self.send_segment(1, 0, dest_ip, dest_port, payload, size)
 
 
 
@@ -174,15 +173,16 @@ class CustomTransportProtocol ():
           
             chunk = chunked_list[j]
             choice = random.randint(1,3)
-         
-            self.send_segment(choice, seq_num, chunk, size)
+            choice = 1
+            self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
+  
             print(f"chunk sending is {chunk}")
             try:
               with ThreadPoolExecutor(max_workers = window_size) as executor:
                 try:
                   future = executor.submit(timer, self, choice, self.nw_obj)
                   print(f"future = {future}")
-                  response = future.result(timeout = 3)
+                  response = future.result(timeout = 5)
                   response = int(response)
                   if response == seq_num:
                     print("correct ack received")
@@ -193,34 +193,14 @@ class CustomTransportProtocol ():
                   print(f"ack: {response}")
                 except concurrent.futures.TimeoutError:
                   print("Message timed out")
-                  self.send_segment(choice, seq_num, chunk, size)
+                  self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
                 except Exception as e:
                   print("Unknown exception: {e}")
             except Exception as e:
               print(f"Unknown exception {e}")
             #time.sleep(5)
             #ack = self.nw_obj.recv_packet()
-          '''while True:
-            #ack = self.nw_obj.recv_packet()
-            
-            ack = ack.decode("utf-8")
-            ack = int(ack)
-            seq_num = int(seq_num)
-            #ack = self.send_transport_ack(seq_num)
-            #ack = self.recv_transport_ack()
-            print(f"ack received is {ack} and {type(ack)}")
-            print(f"seq num should be {seq_num} and {type(ack)}")
-
-            if (ack != seq_num):
-              print(f"wrong ack - {seq_num} expected, {ack} received")
-            #time.sleep(5)
-            seq_num = int(not(seq_num))'''
-            
-            # sending one segment at a time
-            #self.send_segment(choice, seq_num, chunk, size)
-            # wait until timeout or receives an ack
-            # if timeout then resend chunk
-            # else if ack has been received then move onto next chunk
+          
     
         elif protocol == "GoBackN":
           print("in go back n")
@@ -255,7 +235,7 @@ class CustomTransportProtocol ():
               choice = random.randint(1,2)
               print(f"chunk sending is {chunk}")
               print(f"with seq num {seq_num}")
-              self.send_segment(choice, seq_num, chunk, size)
+              self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
               print(f"sending chunk {chunk} with seq_num {seq_num}")
               seq_num = seq_num + 1
               j = j + 1
@@ -264,6 +244,7 @@ class CustomTransportProtocol ():
               if j == 64:
                 break
             #for i in range(i, i + window_size):
+            
             count = 0
             print(f"window size is now {window_size}")
             while True:
@@ -327,28 +308,11 @@ class CustomTransportProtocol ():
 
             
 
-            
-            
-         
-
-          '''ack = ack.decode("utf-8")
-          ack = int(ack)
-          seq_num = int(seq_num)
-
-            print(f"ack received is {ack} and {type(ack)}")
-            print(f"seq num should be {seq_num} and {type(ack)}")
-
-            if (ack != seq_num):
-              print(f"wrong ack - {seq_num} expected, {ack} received")
-            seq_num += 1
-            # have a way to tell which seq_num have an ack
-            # resend those with timeout 
-            # once all have an ack then move window size to next 8 chunks
-          print(f"chunked list: {chunked_list}")'''
-          
+  
         
         elif protocol == "SelectiveRepeat":
           window_size = 8
+          # refactor code from server-client test cases
       
         #self.send_segment(choice, seq_num, segment, size)
       else:
@@ -366,7 +330,7 @@ class CustomTransportProtocol ():
   ##################################
   #  send transport layer segment
   ##################################
-  def send_segment (self, choice, seq_num, chunk, len=0):
+  def send_segment (self, choice, seq_num, dest_ip, dest_port, chunk, len=0):
     protocol = self.config["Transport"]["TransportProtocol"]
     #print(chunk)
     try:
@@ -375,11 +339,11 @@ class CustomTransportProtocol ():
       print ("Custom Transport Protocol::send_segment")
       if choice == 1:
         print("Choice 1: Send the chunk to the next hop")
-        self.nw_obj.send_packet(seq_num, chunk, len)
+        self.nw_obj.send_packet(seq_num, dest_ip, dest_port, chunk, len)
       elif choice == 2:
           print("Choice 2: Delay sending chunk to the next hop")
-          time.sleep(1) 
-          self.nw_obj.send_packet (seq_num, chunk, len)
+          time.sleep(0.1) 
+          self.nw_obj.send_packet (seq_num, dest_ip, dest_port, chunk, len)
       elif choice == 3:
           print("Choice 3: Drop chunk")
           #self.nw_obj.send_packet(seq_num, chunk, len)
@@ -426,12 +390,15 @@ class CustomTransportProtocol ():
         #seq_num = chunk.split("~")[-1]
         
         chunk = chunk.decode("UTF-8")
-        chunk = chunk.split('!!!')
-        seq_num = chunk[0]
-        msg = chunk[-1]
+        print(f"chunk hereeee is now {chunk}")
+
+        seq_num, dest_ip, dest_port, msg = chunk.split("!!!")
+
+        print(f"seq_num {seq_num}, ip {dest_ip}, port {dest_port}")
+
+        print(f"msg is {msg}")
         print(f"chunk sum is {chunk_sum}")
-        #start_i = i
-        
+
         print(f"sending ack {seq_num}")
         if self.protocol == "AlternatingBit":
           if seq_num != last:
@@ -440,7 +407,7 @@ class CustomTransportProtocol ():
             request = request + msg
             chunk_sum += 1
             last = seq_num
-            #i = i + 1
+     
           else:
             self.send_transport_ack(last)
             print("got wrong ack")
@@ -468,9 +435,6 @@ class CustomTransportProtocol ():
               last = -1
           else:
             self.send_transport_ack(last)
-            #i = start_i - 1
-            #print(f"start_i is {start_i} and new i is {i}")
-            #time.sleep(5)
             print("got wrong ack")
             print(f"chunk_sum = {chunk_sum}")
 
