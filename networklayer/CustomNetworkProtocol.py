@@ -12,6 +12,8 @@
 import os     # for OS functions
 import sys    # for syspath and system exception
 import time
+import csv
+import netifaces as ni
 
 # add to the python system path so that packages can be found relative to
 # this directory
@@ -26,6 +28,12 @@ timeout = 500
 #
 # @TODO@ Add whatever make sense here.
 ############################################
+
+def hostname_to_ip (hostname):
+    return "10.0.0." + str(hostname.split("H",1)[-1])
+
+def ip_to_hostname (host_ip):
+    return "H" + host_ip.split(".")[-1]
 
 ############################################
 #       Custom Network Protocol class
@@ -69,6 +77,7 @@ class CustomNetworkProtocol ():
       # Note that in a subsequent assignment, we will need to move on to a
       # different ZMQ socket pair, which supports asynchronous transport. In those
       # assignments we may be using the DEALER-ROUTER pair instead of REQ-REP
+  
 
       if (self.role):
 
@@ -77,6 +86,9 @@ class CustomNetworkProtocol ():
         # we are the server side
         try:
           self.socket = self.ctx.socket (zmq.DEALER)
+          #self.socket - self.ctx.socket (zmq.REP)
+          #bind_string = "tcp://" + self.ip + ":" + str(self.port)
+          #self.socket.bind(bind_string)
         except zmq.ZMQError as err:
           print ("ZeroMQ Error obtaining context: {}".format (err))
           return
@@ -134,7 +146,28 @@ class CustomNetworkProtocol ():
         try:
           # as in a traditional self.socket, tell the system what IP addr and port are we
           # going to connect to. Here, we are using TCP self.sockets.
+
+
+          print("Look up next hop and next port in routing table")
+          
+          intfs = ni.interfaces()
+          host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
+          print(f"host_ip is {host_ip}")
+          hostname = ip_to_hostname(host_ip)
+
+          '''if (config["Network"]["Route"] == "route1"):
+            with open("route1.csv") as f:
+              reader = csv.reader(f)
+              for row in reader:
+                if(row[0]== hostname):
+                  next_hop_name = row[2]
+                  next_hop_port = 4444
+                  next_hop_ip = hostname_to_ip(next_hop_name)
+                  print(f"next_hop_ip = {next_hop_ip}")'''
+                 
+
           connect_string = "tcp://" + self.ip + ":" + str (self.port)
+          #connect_string = "tcp://" + next_hop_ip + ":" + str(next_hop_port)
           print ("Custom Network Protocol Object: Initialize - connect self.socket to {}".format (connect_string))
           self.socket.connect (connect_string)
         except zmq.ZMQError as err:
@@ -145,6 +178,7 @@ class CustomNetworkProtocol ():
           print ("Some exception occurred connecting REQ self.socket {}".format (sys.exc_info()[0]))
           self.socket.close ()
           return
+      
 
     except Exception as e:
       raise e  # just propagate it
@@ -153,7 +187,7 @@ class CustomNetworkProtocol ():
   ######################################
   #  send packet
   ######################################
-  def send_packet (self, seq_num, packet, size):
+  def send_packet (self, seq_num, dest_ip, dest_port, packet, size):
     try:
 
       # Here, we simply delegate to our ZMQ socket to send the info
@@ -170,8 +204,8 @@ class CustomNetworkProtocol ():
       packet = packet.decode()
       #print(packet)
       #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
-      str_packet = str(seq_num) + "!!!" + str(packet)
-      #print(f"chunk in nw layer is {str_packet}")
+      str_packet = str(seq_num) + "!!!" + dest_ip + "!!!" + str(dest_port) + "!!!" + str(packet)
+      print(f"chunk in nw layer is {str_packet}")
 
       if self.config["Application"]["Serialization"] == "json":
         #self.socket.send (bytes(packet, "utf-8"))
@@ -189,11 +223,13 @@ class CustomNetworkProtocol ():
   #  receive packet 
   ######################################
   def recv_packet (self, len=0):
+    
     try:
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
       print ("CustomNetworkProtocol::recv_packet")
 
+     
       
       packet = self.socket.recv_multipart()[-1]
      # print(packet)
