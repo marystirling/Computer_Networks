@@ -33,11 +33,11 @@ ack_list = []
 
 def timer(self, choice, socket):
     response = None
-    
+    print("do we go in the timer")
     try:
       if choice == 3:
      
-        time.sleep(2)
+        time.sleep(1)
      
       else:
         response = 1
@@ -173,7 +173,7 @@ class CustomTransportProtocol ():
           
             chunk = chunked_list[j]
             choice = random.randint(1,3)
-            choice = 1
+            #choice = 1
             self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
   
             print(f"chunk sending is {chunk}")
@@ -182,8 +182,9 @@ class CustomTransportProtocol ():
                 try:
                   future = executor.submit(timer, self, choice, self.nw_obj)
                   print(f"future = {future}")
-                  response = future.result(timeout = 5)
-                  response = int(response)
+                  response = future.result(timeout = 2)
+                  if response is not None:
+                    response = int(response)
                   if response == seq_num:
                     print("correct ack received")
                     seq_num = int(not(seq_num))
@@ -191,11 +192,11 @@ class CustomTransportProtocol ():
                     if j == 64:
                       flag_break = True
                   print(f"ack: {response}")
-                except concurrent.futures.TimeoutError:
-                  print("Message timed out")
-                  self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
+                #except concurrent.futures.TimeoutError:
+                #  print("Message timed out")
+                #  self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
                 except Exception as e:
-                  print("Unknown exception: {e}")
+                  print(f"Unknown exception: {e}")
             except Exception as e:
               print(f"Unknown exception {e}")
             #time.sleep(5)
@@ -226,7 +227,6 @@ class CustomTransportProtocol ():
             wrong_acks = 0
             print(f"what is my seq_num here: {seq_num}")
             print(f"what is my j here {j} and base is {base}")
-            #time.sleep(5)
             acks_recvd = []
             count_window = 0
             for i in range(base, base + window_size):
@@ -243,27 +243,34 @@ class CustomTransportProtocol ():
               print(f"count window is {count_window} and {window_size}")
               if j == 64:
                 break
-            #for i in range(i, i + window_size):
             
             count = 0
             print(f"window size is now {window_size}")
             while True:
-              ack = self.nw_obj.recv_packet()
+              with ThreadPoolExecutor(max_workers= window_size) as executor:
+                try:
+                  future = executor.submit(timer, self, choice, self.nw_obj)
+                  print(f"future = {future}")
+                  ack = future.result(timeout = 5)
+                  ack = int(ack)
+                  heapq.heappush(acks_recvd, ack)
+
+
+                except concurrent.futures.TimeoutError:
+                  print("Message timed out")
+                  # self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
+                except Exception as e:
+                  print(f"Unknown exception: {e}")
+              '''ack = self.nw_obj.recv_packet()
               ack = ack.decode("utf-8")
               ack = int(ack)
              
               heapq.heappush(acks_recvd, ack)
-              print(f"received ack here as {ack}")
+              print(f"received ack here as {ack}")'''
               count += 1
               if count == window_size:
                 break
-            '''for i in range(i, i + window_size):
-              ack = self.nw_obj.recv_packet()
-              ack = ack.decode("utf-8")
-              ack = int(ack)
-              heapq.heappush(acks_recvd, ack)
-              print(f"received ack: {ack}")'''
-            
+
             expected = list(range(0, window_size))
             print(f"expected is: {expected}")
             
@@ -276,40 +283,25 @@ class CustomTransportProtocol ():
               if exp != got:
                 base = exp
                 print(f"missed ack: {exp}")
-                #seq_num = exp
                 seq_num = 0
-                #time.sleep(5)
                 slots_left = window_size - exp
                 wrong_acks = slots_left
-                #wrong_acks += 1 
                 print(f"wrong acks is {wrong_acks}")
-                #time.sleep(5)
                 break
               else:
                 base = exp
-                
-                
-                
                 print(f"new base is {base}")
                 if exp == end:
                   base += 1
                   seq_num = 0 
-                  #j = j - 1
                   print(f"got full window, base = {base}")
                   print(f"the seq_num is now {seq_num}")
                   print(f"the j now is: {j}")
                   if j == 64:
                     flag_break = True
-                  #time.sleep(2)
 
 
-          
 
-
-            
-
-  
-        
         elif protocol == "SelectiveRepeat":
           window_size = 8
           # refactor code from server-client test cases
