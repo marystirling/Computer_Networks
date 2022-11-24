@@ -207,11 +207,9 @@ class CustomTransportProtocol ():
           print("in go back n")
           window_size = 8
           base = 0
-          next_seq_num = 0
           seq_num = 0
           #choice = 1
           #choice = random.randint(1,2)
-          buffer = []
           acks_recvd = []
           heapq.heapify(acks_recvd)
           j = 0 # chunk index for list
@@ -232,11 +230,27 @@ class CustomTransportProtocol ():
             for i in range(base, base + window_size):
               count_window = count_window + 1
               chunk = chunked_list[j]
-              choice = random.randint(1,2)
+              choice = random.randint(1,3)
+              if seq_num == 7 or j >= 55:
+                choice = random.randint(1,2)
+              #choice = 1
               print(f"chunk sending is {chunk}")
+              #time.sleep(5)
               print(f"with seq num {seq_num}")
               self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
               print(f"sending chunk {chunk} with seq_num {seq_num}")
+              #time.sleep(3)
+              with ThreadPoolExecutor(max_workers= window_size) as executor:
+                try:
+                
+                    future = executor.submit(timer, self, choice, self.nw_obj)
+                    print(f"future = {future}")
+                    ack = future.result(timeout = 2)
+                    if ack is not None:
+                      ack = int(ack)
+                      heapq.heappush(acks_recvd, ack)
+                except Exception as e:
+                  print(f"Unknown exception: {e}")
               seq_num = seq_num + 1
               j = j + 1
               window_size = count_window
@@ -246,30 +260,32 @@ class CustomTransportProtocol ():
             
             count = 0
             print(f"window size is now {window_size}")
-            while True:
+            '''while True:
               with ThreadPoolExecutor(max_workers= window_size) as executor:
                 try:
-                  future = executor.submit(timer, self, choice, self.nw_obj)
-                  print(f"future = {future}")
-                  ack = future.result(timeout = 5)
-                  ack = int(ack)
-                  heapq.heappush(acks_recvd, ack)
+                
+                    future = executor.submit(timer, self, choice, self.nw_obj)
+                    print(f"future = {future}")
+                    ack = future.result(timeout = 2)
+                    if ack is not None:
+                      ack = int(ack)
+                      heapq.heappush(acks_recvd, ack)
+                    
+                    count += 1
+                    if count == window_size:
+                      break
 
-
-                except concurrent.futures.TimeoutError:
-                  print("Message timed out")
-                  # self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
                 except Exception as e:
                   print(f"Unknown exception: {e}")
-              '''ack = self.nw_obj.recv_packet()
+              ack = self.nw_obj.recv_packet()
               ack = ack.decode("utf-8")
               ack = int(ack)
              
               heapq.heappush(acks_recvd, ack)
-              print(f"received ack here as {ack}")'''
+              print(f"received ack here as {ack}")
               count += 1
               if count == window_size:
-                break
+                break'''
 
             expected = list(range(0, window_size))
             print(f"expected is: {expected}")
@@ -334,7 +350,7 @@ class CustomTransportProtocol ():
         self.nw_obj.send_packet(seq_num, dest_ip, dest_port, chunk, len)
       elif choice == 2:
           print("Choice 2: Delay sending chunk to the next hop")
-          time.sleep(0.1) 
+          time.sleep(0.2) 
           self.nw_obj.send_packet (seq_num, dest_ip, dest_port, chunk, len)
       elif choice == 3:
           print("Choice 3: Drop chunk")
@@ -393,6 +409,7 @@ class CustomTransportProtocol ():
 
         print(f"sending ack {seq_num}")
         if self.protocol == "AlternatingBit":
+          seq_num = int(seq_num)
           if seq_num != last:
             self.send_transport_ack (seq_num)
             print("got correct ack")
@@ -407,28 +424,42 @@ class CustomTransportProtocol ():
         
         elif self.protocol == "GoBackN":
           seq_num = int(seq_num)
-          print(f"received packet with seq_num  {seq_num}")
+          #print(f"received packet with seq_num  {seq_num}")
+          #time.sleep(5)
           #print(f" i iteration right now is {i}")
           #time.sleep(4)
-          
+          print(f"the last is {last} and the seq_num is {seq_num}")
+          #.sleep(3)
           if seq_num == last + 1:
             
             self.send_transport_ack(seq_num)
-            print("got correct ack")
+            #print("got correct ack")
             request = request + msg
+            print(f"THE APPENDED MESSAGE so far is this: {request}")
+            #time.sleep(3)
             chunk_sum = chunk_sum + 1
             last = seq_num
             print(f"last here is {last}")
             if last != 7:
               print(f"do we ever go in here")
               last = seq_num
-            elif last == 7:
+            elif last == 7 or seq_num == 7:
               print(f"we reached the end so the new last is: {last}")
               last = -1
+          
           else:
+            #last = -1
             self.send_transport_ack(last)
             print("got wrong ack")
             print(f"chunk_sum = {chunk_sum}")
+          
+          #if chunk_sum >= 61 and last >= 2:
+          #  last = -1
+          
+          if seq_num == 7:
+            last = -1
+          #if last == 7:
+           #last = -1
 
         elif self.protocol == "SelectiveRepeat":
           self.health_obj.send_ack(seq_num)
