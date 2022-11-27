@@ -30,7 +30,7 @@ from networklayer.CustomNetworkProtocol import CustomNetworkProtocol as NWProtoO
 
 FULL_PACKET_SIZE = 1024 # application request packet size of 1024 bytes
 MTU = 16 # maximum transfer unit of 16 bytes
-ack_list = []
+#ack_list = []
 
 def timer(self, choice, socket):
     response = None
@@ -90,7 +90,7 @@ class CustomTransportProtocol ():
 
     try:
       # Here we initialize any internal variables
-      print ("Custom Transport Protocol Object: Initialize")
+      #print ("Custom Transport Protocol Object: Initialize")
     
       # initialize our variables
       self.ip = ip
@@ -103,7 +103,7 @@ class CustomTransportProtocol ():
       # Right now we do not care.
       
       # Now obtain our network layer object
-      print ("Custom Transport Protocol::initialize - obtain network object")
+      #print ("Custom Transport Protocol::initialize - obtain network object")
       self.nw_obj = NWProtoObj ()
       
       # initialize it
@@ -111,7 +111,7 @@ class CustomTransportProtocol ():
       # In this assignment, we let network layer (which holds all the ZMQ logic) to
       # directly talk to the remote peer. In future assignments, this will be the
       # next hop router to whom we talk to.
-      print ("Custom Transport Protocol::initialize - initialize network object")
+      #print ("Custom Transport Protocol::initialize - initialize network object")
       self.nw_obj.initialize (config, self.role, self.ip, self.port)
       
     except Exception as e:
@@ -121,7 +121,7 @@ class CustomTransportProtocol ():
   # send application message RESPONSE
   ################################
   def send_appln_msg_response(self, flag_split, dest_ip, dest_port, payload, size):
-    print("Custom Transport Protocol::send_appln_msg_response")
+    #print("Custom Transport Protocol::send_appln_msg_response")
     payload = bytes(payload, "utf-8")
     self.send_segment(1, 0, dest_ip, dest_port, payload, size)
 
@@ -146,16 +146,13 @@ class CustomTransportProtocol ():
       # protocol. For Assignment #1, we send the entire message as is in a single
       # segment
       
-      print ("Custom Transport Protocol::send_appln_msg")
+      #print ("Custom Transport Protocol::send_appln_msg")
       segment = str(flag_split) + "~" + dest_ip + "~" + str(dest_port) + "~" + payload + "###"
       
       segment = bytes(segment,"utf-8")
       segment = GetPaddedSegment(segment)
 
-      print(f"Segment in transport layer {sys.getsizeof(segment)}")
-
-
-      print(segment)
+      
       if (flag_split):
         if protocol == "AlternatingBit":
           window_size = 1
@@ -236,150 +233,87 @@ class CustomTransportProtocol ():
                 wrong_acks += 1
 
         elif protocol == "SelectiveRepeat":
-          print("in selective repeat")
           window_size = 8
-          base = 0
           seq_num = 0
-          acks_recvd = []
-          j = 0 # chunk index for list
           chunked_list = getChunks(segment, MTU)
-          print(chunked_list)
           wrong_acks = 0
-          flag_break = False
           buffer = []
-          start_j = 0
+          start = 0
           for i in range(window_size):
-            buffer.append([i, -1, -1, False]) # (seq_num, j, chunk, ack received?)
-          print(buffer)
-          acks_recvd = []
+            buffer.append([i, -1, False]) # (seq_num, chunk, ack received?)
+         
+
           while True:
-
-            if flag_break:
-              break
-            
             acks_recvd = []
-
             count_window = 0
-
-            #seq_num = 0
             flag_stay = False
+
             for i in range(len(buffer)):
-              print("do we enter this FOR LOOP")
-              if buffer[i][3] == False:
+              if buffer[i][2] == False:
                 flag_stay = True
-                print(f"flag_stay is {flag_stay} for {buffer[i][3]}")
+                
             if not flag_stay:
-              print("do we enter not flag stay")
-              j = buffer[-1][1] + 1
-              seq_num = j
-              start_j += len(buffer)
+              seq_num = buffer[-1][0] + 1
+              start += len(buffer)
               buffer = []
               for i in range(seq_num, seq_num + window_size):
-                buffer.append([i, -1, -1, False]) # (seq_num, j, chunk, ack received?)
-                print(buffer)
+                buffer.append([i, -1, False]) # (seq_num, chunk, ack received?)
             else: 
-              #j = j - window_size
-              j = start_j
+              seq_num = start
             m = 0
-            seq_num = j 
-            print(f"MY J IS {j} and m is {m} and seq_num is {seq_num}")
-            #start_j = j
-           
+          
             if seq_num == 64:
               break
             
             for i in range(seq_num, seq_num + window_size):
-              print(buffer)
               count_window = count_window + 1
               chunk = chunked_list[seq_num]
-              print(f"the base is here {i}")
-              print(f"the chunk in question is {chunk}")
-              print(f"seq_num is {seq_num}")
-              print(f"the seq_num in buffer here is already {buffer[m][0]}")
               buffer[m][0] = seq_num
-              buffer[m][1] = j
-              buffer[m][2] = chunk
+              buffer[m][1] = chunk
               choice = random.randint(1,3)
-              #choice = 1
-              #if seq_num == 7 or j >= 55:
-              #  choice = random.randint(1,2)
-              #choice = 1
-              if buffer[m][3] == False:
-                print(f"chunk sending is {chunk} with seq num {seq_num}")
+
+              if buffer[m][2] == False:
+                print(f"chunk sending {chunk} with seq num {seq_num}")
                 self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
               
                 with ThreadPoolExecutor(max_workers= window_size) as executor:
                   try:
-                  
                       future = executor.submit(timer, self, choice, self.nw_obj)
-                      print(f"future = {future}")
                       ack = future.result(timeout = 2)
                       if ack is not None:
                         acks_recvd.append(int(ack))
                   except Exception as e:
-                    print("is this the exception")
                     print(f"Unknown exception: {e}")
               seq_num = seq_num + 1
-              j = j + 1
               m += 1
               window_size = count_window
-              print(f"count window is {count_window} and {window_size}")
               if seq_num == 64:
-                #flag_break = True
                 break
             
-            print(f"window size is now {window_size}")
-            #acks_recvd.sort()
+            
             missing_acks = []
-            #test_acks = acks_recvd
-            acks_recvd = [*set(acks_recvd)]
-            if -1 in acks_recvd:
-              acks_recvd.remove(-1)
-            print(f"acks_recvd is {acks_recvd}")
             acks_recvd.sort()
-            print(f"acks in recv_acks is {acks_recvd}")
             for i in range(seq_num - window_size, seq_num):
               if i not in acks_recvd:
                 missing_acks.append(i)
-            print(f"missing acks is {missing_acks}")
             n = 0
             for i in range(seq_num - window_size, seq_num):
               if i in missing_acks:
                 acks_recvd.insert(n, None)
               n += 1
-            print(f"acks recvd is now {acks_recvd}")
             expected = list(range(seq_num - window_size, seq_num))
-            print(f"expected is: {expected}")
             
             matching = []
             matching = list(itertools.zip_longest(expected, acks_recvd))
-            print(f"matching: {matching}")
-            end = window_size - 1
-            print(f"end should be {end}")
+            print(f"(expected, got): {matching}")
+
             m = 0
             for exp, got in matching:
-              if exp != got:
-                #base = exp
+              if exp != got and buffer[m][2] == False:
                 print(f"missed ack: {exp}")
-                #seq_num = 0
-                
-                #break
               else:
-                #base = exp
-                print("DID WE GO IN HEREEEEEE")
-                print(f"{buffer[m][3]}")
-                buffer[m][3] = True
-                #buffer.pop(seq_num)
-                print(f"new base is {base}")
-                #if exp == 0:
-                #    base += 1
-                if exp == end:
-                  #seq_num = 0 
-                  print(f"got full window, base = {base}")
-                  print(f"the seq_num is now {seq_num}")
-                  print(f"the j now is: {j}")
-                  if j == 64:
-                    flag_break = True
+                buffer[m][2] = True
+                print(f"correct ack: {buffer[m][0]}")
               m += 1
             
       else:
@@ -403,7 +337,7 @@ class CustomTransportProtocol ():
     try:
       # For this assignment, we ask our dummy network layer to
       # send it to peer. We ignore the length in this assignment
-      print ("Custom Transport Protocol::send_segment")
+      #print ("Custom Transport Protocol::send_segment")
       if choice == 1:
         print("Choice 1: Send the chunk to the next hop")
         self.nw_obj.send_packet(seq_num, dest_ip, dest_port, chunk, len)
@@ -425,7 +359,7 @@ class CustomTransportProtocol ():
   #  receive application-level message
   ######################################
   def recv_appln_msg_response (self, len=0):
-    print("Custom Transport Protocol:: recv_appln_msg_response")
+    #print("Custom Transport Protocol:: recv_appln_msg_response")
     segment = self.nw_obj.recv_packet(len)
     return segment
 
@@ -441,41 +375,28 @@ class CustomTransportProtocol ():
       # order and only then pass it up to the caller.
       #
       # For this assignment, we do not care about all these things.
-      print ("Custom Transport Protocol::recv_appln_msg")
-      #appln_msg = self.recv_segment ()
-      self.protocol = self.config["Transport"]["TransportProtocol"]
+      #print ("Custom Transport Protocol::recv_appln_msg")
 
+      self.protocol = self.config["Transport"]["TransportProtocol"]
       chunk_sum = 0
       request = ''
       last = -1
       buffer = []
       window_size = 8
       m = 0
+
       for i in range(window_size):
-        buffer.append([i, -1, False]) # (seq_num, chunk, ack received?)
-        print(buffer)
-      #i = 0
-      #last = 0
+        buffer.append([i, -1, False]) 
       m = 0
+
       while True:
-      #for i in range(64):
         chunk = self.recv_segment ()
-        #chunk = chunk.decode("UTF-8")
-        #seq_num = chunk.split("~")[-1]
-        
         chunk = chunk.decode("UTF-8")
-        print(f"chunk hereeee is now {chunk}")
-
         seq_num, dest_ip, dest_port, msg = chunk.split("!!!")
-
-        print(f"seq_num {seq_num}, ip {dest_ip}, port {dest_port}")
+        seq_num = int(seq_num)
         flag_break = False
 
-        print(f"msg is {msg}")
-        print(f"chunk sum is {chunk_sum}")
-
         if self.protocol == "AlternatingBit":
-          seq_num = int(seq_num)
           if seq_num != last:
             self.send_transport_ack (seq_num)
             print(f"sent ack for sequence number {seq_num}")
@@ -488,7 +409,6 @@ class CustomTransportProtocol ():
 
         
         elif self.protocol == "GoBackN":
-          seq_num = int(seq_num)
           if seq_num == last + 1:
             self.send_transport_ack(seq_num)
             print(f"sent ack for sequence number {seq_num}")
@@ -502,27 +422,17 @@ class CustomTransportProtocol ():
    
 
         elif self.protocol == "SelectiveRepeat":
-          seq_num = int(seq_num)
-
-          #if m == 8:
-            #m = 0
           for i in range(window_size):
             if seq_num == buffer[i][0]:
               m = i 
-              print(f"THE M IS NOW: {m} with {seq_num}")
-              
-          #print(f"the last is {last} and the seq_num is {seq_num}")
-          #buffer.append([seq_num, msg])
-          print(f"THe M is currently {m}")
+
           buffer[m][0] = seq_num
           buffer[m][1] = msg
           buffer[m][2] = True
-          print(f"buffer: {buffer}")
-          #self.send_transport_ack(seq_num)
-          #buffer.sort()
           buffer = sorted(buffer, key=itemgetter(0))
-          print(f"sorted buffer: {buffer}")
+          
           self.send_transport_ack(seq_num)
+          print(f"sending ack for sequence number {seq_num}")
           
           
           for i in range(window_size):
@@ -532,26 +442,17 @@ class CustomTransportProtocol ():
           if not flag_break:
             for i in range(window_size):
               request = request + buffer[i][1]
-              print(f"APPENDED MESSAGE is {request}")
             chunk_sum = chunk_sum + window_size
-            print(f"chunk sum in this loop is {chunk_sum}")
             buffer = []
             for i in range(chunk_sum, chunk_sum + window_size):
               buffer.append([i, -1, False]) # (seq_num, chunk, ack received?)
-              print(buffer)
           m += 1
-
-          
-            
-          
-          
-
         
         if chunk_sum == 64:
           print("received all chunks")
           break
       
-      print(f"appended {request}")
+      print(f"appended request: {request}")
 
       appln_msg = request.split("###")[0]
 
@@ -569,7 +470,7 @@ class CustomTransportProtocol ():
       # a pipeline of segments.
       #
       # For this assignment, we do not care about all these things.
-      print ("Custom Transport Protocol::recv_segment")
+      #print ("Custom Transport Protocol::recv_segment")
       segment = self.nw_obj.recv_packet (len)
 
       return segment
