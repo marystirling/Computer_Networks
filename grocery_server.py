@@ -58,7 +58,7 @@ class GroceryOrder ():
 
     try:
       # Here we initialize any internal variables
-      print ("GroceryOrder Object: Initialize")
+      #print ("GroceryOrder Object: Initialize")
     
       # Now, get the configuration object
       config = configparser.ConfigParser ()
@@ -91,26 +91,13 @@ class GroceryOrder ():
   # Driver program
   ##################################
   def driver (self):
-    print("in grocery_server driver")
-
-    intfs = ni.interfaces()
-    host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
-    print(f"host_ip is {host_ip}")
 
     try:
       # The grocery order server will run forever
       while True:
-        print("do we get here for the error")
         request = self.grocery_obj.recv_request ()
-        print ("Received request: {}".format (request))
-
-
         flag_split, dest_ip, dest_port, payload = request.split("~")
-
-        print ("Received request: {}".format (request))
-        #request = bytes(request, "utf-8")
         resp = self.gen_response_msg()
-        #request = payload
         resp.type = resp.msg["type"] = 3
         
         if (self.ser_type == "json"):
