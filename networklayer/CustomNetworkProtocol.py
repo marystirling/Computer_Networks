@@ -148,8 +148,6 @@ class CustomNetworkProtocol ():
           # going to connect to. Here, we are using TCP self.sockets.
 
 
-          print("Look up next hop and next port in routing table")
-          
           intfs = ni.interfaces()
           host_ip = ni.ifaddresses(intfs[1])[ni.AF_INET][0]['addr']
           print(f"host_ip is {host_ip}")
@@ -191,22 +189,13 @@ class CustomNetworkProtocol ():
     try:
 
       # Here, we simply delegate to our ZMQ socket to send the info
-      print ("Custom Network Protocol::send_packet")
+      #print ("Custom Network Protocol::send_packet")
       
-      #dest_ip = packet[0]
-      #dest_port = packet[1]
-      #payload = packet[2]
-      #print(f"seq_num is {seq_num} and packet is {packet}")
       
-      #print(f"the size of my packet in network layer is: {sys.getsizeof(packet)}")
-      #print(packet)
-      print(packet)
       packet = packet.decode()
-      #print(packet)
-      #print(f"The size of my packet in network layer is: {sys.getsizeof(packet)}")
-      str_packet = str(seq_num) + "!!!" + dest_ip + "!!!" + str(dest_port) + "!!!" + str(packet)
-      print(f"chunk in nw layer is {str_packet}")
 
+      str_packet = str(seq_num) + "!!!" + dest_ip + "!!!" + str(dest_port) + "!!!" + str(packet)
+      
       if self.config["Application"]["Serialization"] == "json":
         #self.socket.send (bytes(packet, "utf-8"))
         self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
@@ -227,17 +216,11 @@ class CustomNetworkProtocol ():
     try:
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
-      print ("CustomNetworkProtocol::recv_packet")
+      #print ("CustomNetworkProtocol::recv_packet")
 
-     
-      
       packet = self.socket.recv_multipart()[-1]
      # print(packet)
       packet.decode("utf-8")
-      print(f"packet after recv_packet is {packet}")
-      #time.sleep(1)
-      #packet = self.socket.recv ()
-      
       return packet
     except Exception as e:
       raise e
@@ -247,7 +230,7 @@ class CustomNetworkProtocol ():
   def send_packet_ack (self, seq_num, len=0):
     try:
       
-      print ("CustomNetworkProtocol::send_packet_ack")
+      #print ("CustomNetworkProtocol::send_packet_ack")
       #self.socket.send(bytes(str(seq_num), "utf-8"))
       self.socket.send_multipart([b'', bytes(str(seq_num), "utf-8")])
 
@@ -261,7 +244,7 @@ class CustomNetworkProtocol ():
     try:
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
-      print ("CustomNetworkProtocol::recv_packet")
+      #print ("CustomNetworkProtocol::recv_packet")
 
       ack = self.socket.recv_multipart()[-1]
       #ack = self.socket.recv()
