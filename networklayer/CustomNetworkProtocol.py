@@ -153,7 +153,7 @@ class CustomNetworkProtocol ():
           print(f"host_ip is {host_ip}")
           hostname = ip_to_hostname(host_ip)
 
-          '''if (config["Network"]["Route"] == "route1"):
+          if (config["Network"]["Route"] == "route1"):
             with open("route1.csv") as f:
               reader = csv.reader(f)
               for row in reader:
@@ -161,13 +161,14 @@ class CustomNetworkProtocol ():
                   next_hop_name = row[2]
                   next_hop_port = 4444
                   next_hop_ip = hostname_to_ip(next_hop_name)
-                  print(f"next_hop_ip = {next_hop_ip}")'''
+                  print(f"next_hop_ip = {next_hop_ip}")
                  
 
-          connect_string = "tcp://" + self.ip + ":" + str (self.port)
-          #connect_string = "tcp://" + next_hop_ip + ":" + str(next_hop_port)
+          #connect_string = "tcp://" + self.ip + ":" + str (self.port)
+          connect_string = "tcp://" + next_hop_ip + ":" + str(next_hop_port)
           print ("Custom Network Protocol Object: Initialize - connect self.socket to {}".format (connect_string))
           self.socket.connect (connect_string)
+          print(f"connecting to this socket {self.socket}")
         except zmq.ZMQError as err:
           print ("ZeroMQ Error connecting REQ self.socket: {}".format (err))
           self.socket.close ()
@@ -197,8 +198,8 @@ class CustomNetworkProtocol ():
       str_packet = str(seq_num) + "!!!" + dest_ip + "!!!" + str(dest_port) + "!!!" + str(packet)
       
       if self.config["Application"]["Serialization"] == "json":
-        #self.socket.send (bytes(packet, "utf-8"))
-        self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
+        self.socket.send (bytes(str_packet, "utf-8"))
+        #self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
       elif self.config["Application"]["Serialization"] == "fbufs":
         self.socket.send (packet)
 
@@ -217,8 +218,8 @@ class CustomNetworkProtocol ():
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
       #print ("CustomNetworkProtocol::recv_packet")
-
-      packet = self.socket.recv_multipart()[-1]
+      packet = self.socket.recv()
+      #packet = self.socket.recv_multipart()[-1]
      # print(packet)
       packet.decode("utf-8")
       return packet
@@ -232,7 +233,8 @@ class CustomNetworkProtocol ():
       
       #print ("CustomNetworkProtocol::send_packet_ack")
       #self.socket.send(bytes(str(seq_num), "utf-8"))
-      self.socket.send_multipart([b'', bytes(str(seq_num), "utf-8")])
+      self.socket.send(bytes(str(seq_num), "utf-8"))
+      #self.socket.send_multipart([b'', bytes(str(seq_num), "utf-8")])
 
     except Exception as e:
       raise e
@@ -245,8 +247,8 @@ class CustomNetworkProtocol ():
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
       #print ("CustomNetworkProtocol::recv_packet")
-
-      ack = self.socket.recv_multipart()[-1]
+      ack = self.socket.recv()
+      #ack = self.socket.recv_multipart()[-1]
       #ack = self.socket.recv()
       return ack
       
