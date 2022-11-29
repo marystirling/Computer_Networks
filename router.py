@@ -73,7 +73,7 @@ def driver (args):
     # type. For TCP, we will use ROUTER for server side (many other pairs are supported
     # in ZMQ for tcp.
     print ("Obtain the ROUTER type socket")
-    bind_sock = context.socket (zmq.ROUTER)
+    bind_sock = context.socket (zmq.DEALER)
   except zmq.ZMQError as err:
     print ("ZeroMQ Error obtaining ROUTER socket: {}".format (err))
     return
@@ -114,6 +114,9 @@ def driver (args):
 
   
 
+  connected = []
+  conn_sockets = dict()
+
 
   
   # since we are a server, we service incoming clients forever
@@ -138,16 +141,13 @@ def driver (args):
         # multipart send/receive. What we receive will comprise the sender's info which we must preserve, an empty
         # byte, and then the actual payload
         print ("Receive from prev hop")
-        request = bind_sock.recv_multipart ()[-1]
+        #request = bind_sock.recv_multipart ()[-1]
+        #request = bind_sock.recv_multipart()
+        request = bind_sock.recv()
         request = request.decode("UTF-8")
         print(f"request in router is {request}")
-        seq_num, dest_ip, dest_port, payload = request.split("~")
-        #seq_num, dest_ip, dest_port = request.split("~")
-        print(f"is this where error is ugh")
-        #request = ""
-        #seq_num, dest_ip, dest_port, request = request.split("!!!")
-        print(f"is this where the error went wrong")
-        #seq_num, dest_ip, dest_port, request = request.split("!!!")
+        seq_num, dest_ip, dest_port, payload = request.split("!!!")
+
       
         print("Router received request from prev hop via ROUTER: %s" % request)
         
@@ -170,73 +170,7 @@ def driver (args):
         except Exception as e:
           print(f"Exception when reading routing table: {e}")
         
-        '''try:
-          # The socket concept in ZMQ is far more advanced than the traditional socket in
-          # networking. Each socket we obtain from the context object must be of a certain
-          # type. For TCP, we will use the DEALER socket type (many other pairs are supported)
-          # and this is to be used on the client side.
-          print ("Router acquiring connection socket")
-          conn_sock = context.socket (zmq.DEALER)
-        except zmq.ZMQError as err:
-          print ("ZeroMQ Error obtaining context: {}".format (err))
-          return
-        except:
-          print ("Some exception occurred getting DEALER socket {}".format (sys.exc_info()[0]))
-          return
         
-        try:
-          # set our identity
-          print ("router setting its identity: {}".format (hostname))
-          conn_sock.setsockopt (zmq.IDENTITY, bytes (hostname, "utf-8"))
-        except zmq.ZMQError as err:
-          print ("ZeroMQ Error setting sockopt: {}".format (err))
-          return
-        except:
-          print ("Some exception occurred setting sockopt on REQ socket {}".format (sys.exc_info()[0]))
-          return
-        
-
-        try:
-        # as in a traditional socket, tell the system what IP addr and port are we
-        # going to connect to. Here, we are using TCP sockets.
-          print ("Router connecting to next hop")
-          connect_string = "tcp://" + next_hop_ip + ":" + str (next_hop_port)
-          print ("TCP client will be connecting to {}".format (connect_string))
-          conn_sock.connect (connect_string)
-        except zmq.ZMQError as err:
-          print ("ZeroMQ Error connecting DEALER socket: {}".format (err))
-          conn_sock.close ()
-          return
-        except:
-          print ("Some exception occurred connecting DEALER socket {}".format (sys.exc_info()[0]))
-          conn_sock.close ()
-          return
-        
-        try:
-          # register sockets
-          print ("Register sockets for incoming events")
-          #poller.register (bind_sock, zmq.POLLIN)
-          poller.register (conn_sock, zmq.POLLIN)
-        except zmq.ZMQError as err:
-          print ("ZeroMQ Error registering with poller: {}".format (err))
-          return
-        except:
-          print ("Some exception occurred getting poller {}".format (sys.exc_info()[0]))
-          return
-
-        try:
-          #  forward request to server
-          print ("Forward the same request to next hop over the DEALER")
-          conn_sock.send_multipart([b'', bytes(request,"utf-8")])
-          #conn_sock.send_multipart (request)
-        except zmq.ZMQError as err:
-          print ("ZeroMQ Error forwarding: {}".format (err))
-          conn_sock.close ()
-          return
-        except:
-          print ("Some exception occurred forwarding {}".format (sys.exc_info()[0]))
-          conn_sock.close ()
-          return'''
             
       except zmq.ZMQError as err:
         print ("ZeroMQ Error receiving: {}".format (err))
@@ -247,85 +181,78 @@ def driver (args):
         bind_sock.close ()
         return
       
-    '''print("Look up next hop and next port in routing table")
-    try:
-      if (config["Network"]["Route"] == "route1"):
-        with open("route1.csv") as f:
-          reader = csv.reader(f)
-          for row in reader:
-            if(row[0]== hostname and row[1] == dest_ip):
-              next_hop_name = row[2]
-              next_hop_ip = hostname_to_ip(next_hop_name)
-              if next_hop_ip == dest_ip:
-                next_hop_port = 5555
-              else:
-                next_hop_port = 4444
-       
-      print(f"next hop name is {next_hop_name} and next hop ip is {next_hop_ip}")
-    except Exception as e:
-      print(f"Exception when reading routing table: {e}")'''
-
     
+    if dest_ip in connected:
+      conn_sock = conn_sockets[dest_ip]
+    else:
 
-    try:
-      # The socket concept in ZMQ is far more advanced than the traditional socket in
-      # networking. Each socket we obtain from the context object must be of a certain
-      # type. For TCP, we will use the DEALER socket type (many other pairs are supported)
-      # and this is to be used on the client side.
-      print ("Router acquiring connection socket")
-      conn_sock = context.socket (zmq.DEALER)
-    except zmq.ZMQError as err:
-      print ("ZeroMQ Error obtaining context: {}".format (err))
-      return
-    except:
-      print ("Some exception occurred getting DEALER socket {}".format (sys.exc_info()[0]))
-      return
-    
-    try:
-      # set our identity
-      print ("router setting its identity: {}".format (hostname))
-      conn_sock.setsockopt (zmq.IDENTITY, bytes (hostname, "utf-8"))
-    except zmq.ZMQError as err:
-      print ("ZeroMQ Error setting sockopt: {}".format (err))
-      return
-    except:
-      print ("Some exception occurred setting sockopt on REQ socket {}".format (sys.exc_info()[0]))
-      return
+      try:
+        # The socket concept in ZMQ is far more advanced than the traditional socket in
+        # networking. Each socket we obtain from the context object must be of a certain
+        # type. For TCP, we will use the DEALER socket type (many other pairs are supported)
+        # and this is to be used on the client side.
+        print ("Router acquiring connection socket")
+        conn_sock = context.socket (zmq.DEALER)
+      except zmq.ZMQError as err:
+        print ("ZeroMQ Error obtaining context: {}".format (err))
+        return
+      except:
+        print ("Some exception occurred getting DEALER socket {}".format (sys.exc_info()[0]))
+        return
+      
+      try:
+        # set our identity
+        print ("router setting its identity: {}".format (hostname))
+        conn_sock.setsockopt (zmq.IDENTITY, bytes (hostname, "utf-8"))
+      except zmq.ZMQError as err:
+        print ("ZeroMQ Error setting sockopt: {}".format (err))
+        return
+      except:
+        print ("Some exception occurred setting sockopt on REQ socket {}".format (sys.exc_info()[0]))
+        return
     
 
-    try:
-    # as in a traditional socket, tell the system what IP addr and port are we
-    # going to connect to. Here, we are using TCP sockets.
-      print ("Router connecting to next hop")
-      connect_string = "tcp://" + next_hop_ip + ":" + str (next_hop_port)
-      print ("TCP client will be connecting to {}".format (connect_string))
-      conn_sock.connect (connect_string)
-    except zmq.ZMQError as err:
-      print ("ZeroMQ Error connecting DEALER socket: {}".format (err))
-      conn_sock.close ()
-      return
-    except:
-      print ("Some exception occurred connecting DEALER socket {}".format (sys.exc_info()[0]))
-      conn_sock.close ()
-      return
-    
-    try:
-      # register sockets
-      print ("Register sockets for incoming events")
-      #poller.register (bind_sock, zmq.POLLIN)
-      poller.register (conn_sock, zmq.POLLIN)
-      print(f"conn_sock on {host_ip} is {conn_sock}")
-    except zmq.ZMQError as err:
-      print ("ZeroMQ Error registering with poller: {}".format (err))
-      return
-    except:
-      print ("Some exception occurred getting poller {}".format (sys.exc_info()[0]))
-      return
+      try:
+      # as in a traditional socket, tell the system what IP addr and port are we
+      # going to connect to. Here, we are using TCP sockets.
+        print ("Router connecting to next hop")
+        connect_string = "tcp://" + next_hop_ip + ":" + str (next_hop_port)
+        print ("TCP client will be connecting to {}".format (connect_string))
+        conn_sock.connect (connect_string)
+      except zmq.ZMQError as err:
+        print ("ZeroMQ Error connecting DEALER socket: {}".format (err))
+        conn_sock.close ()
+        return
+      except:
+        print ("Some exception occurred connecting DEALER socket {}".format (sys.exc_info()[0]))
+        conn_sock.close ()
+        return
+      
+      try:
+        # register sockets
+        print ("Register sockets for incoming events")
+        #poller.register (bind_sock, zmq.POLLIN)
+        poller.register (conn_sock, zmq.POLLIN)
+        print(f"conn_sock on {host_ip} is {conn_sock}")
+      except zmq.ZMQError as err:
+        print ("ZeroMQ Error registering with poller: {}".format (err))
+        return
+      except:
+        print ("Some exception occurred getting poller {}".format (sys.exc_info()[0]))
+        return
+      
+      conn_sockets[dest_ip] = conn_sock
+      connected.append(dest_ip)
+      print(f"conn_sockets is now {conn_sockets}")
+      print(f"connected is {connected}")
+
   
     try:
       #  forward request to server
       print ("Forward the same request to next hop over the DEALER")
-      conn_sock.send_multipart([b'', bytes(request,"utf-8")])
+      #conn_sock.send_multipart([b'', bytes(request,"utf-8")])
+      conn_sock.send (bytes(request, "utf-8"))
+      #conn_sock.send_multipart(bytes(request, "utf-8"))
       print(f"{request}")
       #conn_sock.send_multipart (request)
     except zmq.ZMQError as err:
@@ -353,13 +280,16 @@ def driver (args):
       try:
         #  Wait for response from next hop
         print ("Receive from next hop")
-        response = conn_sock.recv_multipart ()[-1]
+        #response = conn_sock.recv_multipart ()[-1]
+        #response = conn_sock.recv_multipart()
+        response = conn_sock.recv ()
         print("Router received response from next hop via DEALER: %s" % response)
       except zmq.ZMQError as err:
         print ("ZeroMQ Error receiving response: {}".format (err))
         conn_sock.close ()
         return
       except:
+
         print ("Some exception occurred receiving response {}".format (sys.exc_info()[0]))
         conn_sock.close ()
         return
@@ -370,7 +300,8 @@ def driver (args):
         print(response)
         print ("Send reply to prev hop via ROUTER")
         #bind_sock.send_multipart (response)
-        bind_sock.send_multipart([b'', bytes(request,"utf-8")])
+        bind_sock.send(response)
+        #bind_sock.send_multipart([b'', bytes(request,"utf-8")])
         print(f"did we send on {bind_sock} the {response}")
       except zmq.ZMQError as err:
         print ("ZeroMQ Error sending: {}".format (err))
