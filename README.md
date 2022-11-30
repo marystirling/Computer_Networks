@@ -66,6 +66,7 @@ $ sudo mn --topo=single,3 --link=tc
 
 Then type:\
 $ source commands1.txt
+
 $ xterm h1
 
 
@@ -79,7 +80,8 @@ Open a bash shell and type in the following commands to create 3 hosts and 3 swi
 $ sudo mn --topo=single,3 --link=tc
 
 Then type:\
-$ source commands1.txt
+$ source commands1.txt 
+
 $ xterm h1
 
 
@@ -93,6 +95,7 @@ $ sudo mn --topo=tree,depth=3,fanout=3 --link=tc
 
 Then type:\
 $ source commands2.txt
+
 $ xterm h1
 
 
