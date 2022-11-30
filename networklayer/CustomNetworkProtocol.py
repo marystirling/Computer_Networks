@@ -69,6 +69,9 @@ class CustomNetworkProtocol ():
       print ("Custom Network Protocol Object: Initialize - get ZeroMQ context")
       self.ctx = zmq.Context ()
 
+      
+      self.poller = zmq.Poller ()
+
       # initialize the config object
       
       # initialize our ZMQ socket
@@ -104,6 +107,8 @@ class CustomNetworkProtocol ():
           bind_string = "tcp://" + self.ip + ":" + str (self.port)
           print ("Custom Network Protocol Object: Initialize - connect self.socket to {}".format (bind_string))
           self.socket.bind (bind_string)
+
+          self.poller.register(self.socket, zmq.POLLIN)
         except zmq.ZMQError as err:
           print ("ZeroMQ Error connecting REQ self.socket: {}".format (err))
           self.socket.close ()
@@ -162,10 +167,19 @@ class CustomNetworkProtocol ():
                   next_hop_port = 4444
                   next_hop_ip = hostname_to_ip(next_hop_name)
                   print(f"next_hop_ip = {next_hop_ip}")
+          elif (config["Network"]["Route"] == "route2"):
+            with open("route2.csv") as f:
+              reader = csv.reader(f)
+              for row in reader:
+                if(row[0]== hostname):
+                  next_hop_name = row[2]
+                  next_hop_port = 4444
+                  next_hop_ip = hostname_to_ip(next_hop_name)
+                  print(f"next_hop_ip = {next_hop_ip}")
                  
 
-          #connect_string = "tcp://" + self.ip + ":" + str (self.port)
-          connect_string = "tcp://" + next_hop_ip + ":" + str(next_hop_port)
+          connect_string = "tcp://" + self.ip + ":" + str (self.port)
+          #connect_string = "tcp://" + next_hop_ip + ":" + str(next_hop_port)
           print ("Custom Network Protocol Object: Initialize - connect self.socket to {}".format (connect_string))
           self.socket.connect (connect_string)
           print(f"connecting to this socket {self.socket}")
@@ -202,7 +216,7 @@ class CustomNetworkProtocol ():
         #self.socket.send_multipart([b'', bytes(str_packet,"utf-8")])
       elif self.config["Application"]["Serialization"] == "fbufs":
         self.socket.send (packet)
-
+      #time.sleep(1)
 
     except Exception as e:
       raise e
@@ -234,6 +248,8 @@ class CustomNetworkProtocol ():
       #print ("CustomNetworkProtocol::send_packet_ack")
       #self.socket.send(bytes(str(seq_num), "utf-8"))
       self.socket.send(bytes(str(seq_num), "utf-8"))
+      print(f"in send_packet_ack sent {seq_num}")
+      #time.sleep(1)
       #self.socket.send_multipart([b'', bytes(str(seq_num), "utf-8")])
 
     except Exception as e:
@@ -246,11 +262,21 @@ class CustomNetworkProtocol ():
     try:
       # @TODO@ Note that this method always receives bytes. So if you want to
       # convert to json, some mods will be needed here. Use the config.ini file.
-      #print ("CustomNetworkProtocol::recv_packet")
-      ack = self.socket.recv()
-      #ack = self.socket.recv_multipart()[-1]
+      #print ("CustomNetworkProtocol::recv_packet_ack")
+      #self.poller.poll()
       #ack = self.socket.recv()
-      return ack
+      #ack.decode("utf-8")
+      #return ack
+      event = self.socket.poll(timeout = 0.01, flags = zmq.POLLIN)
+      if event:
+       
+        ack = self.socket.recv()
+        ack.decode("utf-8")
+        print(f"{ack}")
+        #time.sleep(1)
+        #ack = self.socket.recv_multipart()[-1]
+        #ack = self.socket.recv()
+        return ack
       
       
     except Exception as e:
