@@ -108,6 +108,7 @@ class HealthStatus ():
         
         request = self.health_obj.recv_request ()
         flag_split, dest_ip, dest_port, payload = request.split("~")
+        #payload = request
         resp = self.gen_response_msg()
         resp.type = resp.msg["type"] = 3
         

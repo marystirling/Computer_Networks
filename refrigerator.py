@@ -24,6 +24,12 @@ import random
 import time
 import netifaces as ni
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+import statistics
+import seaborn as sns
+
 
 
 # add to the python system path so that the following packages can be found
@@ -190,7 +196,7 @@ class Refrigerator ():
       elif (config["Network"]["Route"] == "route2"):
           groc_server_ip = "10.0.0.1"
           health_server_ip = "10.0.0.27"
-          
+       
       msg = self.gen_grocery_order_msg ()
 
       print ("Sending grocery msg to health server {}".format (msg))
@@ -234,7 +240,7 @@ class Refrigerator ():
       # Just alternating between the two is fine. What we really care is that both
       # kinds of message types can be sent, and that if they received by the right
       # server, we get a success response. Time the result.
-      for i in range(2):
+      for i in range(30):
       #for i in range (self.iters):
         if (i % 2) == 0:
           # create a grocery order
@@ -326,6 +332,11 @@ def main ():
     print ("Refrigerator main: invoke driver")
     fridge.driver (parsed_args)
     print(time_list)
+
+    ax = sns.distplot(a=time_list, bins=40, color='blue', hist_kws={"edgecolor": 'black'})
+    ax.set(xlabel = "latency time")
+    ax.set(title = "Topology 2: Alternating Bit Protocol")
+    plt.show()
 
     # we are done. collect results and do the plotting etc.
     #

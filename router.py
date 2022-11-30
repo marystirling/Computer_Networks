@@ -165,6 +165,15 @@ def driver (args):
                     next_hop_port = 5555
                   else:
                     next_hop_port = 4444
+          elif (config["Network"]["Route"] == "route2"):
+            with open("route2.csv") as f:
+              reader = csv.reader(f)
+              for row in reader:
+                if(row[0]== hostname):
+                  next_hop_name = row[2]
+                  next_hop_port = 4444
+                  next_hop_ip = hostname_to_ip(next_hop_name)
+                  print(f"next_hop_ip = {next_hop_ip}")
           
           print(f"next hop name is {next_hop_name} and next hop ip is {next_hop_ip}")
         except Exception as e:
