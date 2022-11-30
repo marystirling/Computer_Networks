@@ -1,5 +1,5 @@
 # Computer_Networks
-# Assignment 1
+# Assignment 3
 
 
 
@@ -31,23 +31,31 @@ The Psuedo Link Layer is suported by our ZeroMQ messaging layer
 
 The (Pseudo) Physical Layer supports the actual communication. This can be intra-host using localhost, or mininet, or Docker Swarm/Kubernetes cluster or actual distributed hosts
 
-# Flatbuffer compiler
 
-Before setting the serialization type to flatbuffer, you have to compile the three .fbs files on your machine (grocery_order.fbs, health_status.fbs, response_messages.fbs)
+# How to run Assignment 3 in mininet:
+Define what transport protocol you want to use in config.ini for Transport as either Alternating Bit Protocol, Go Back N, or Selective Repeat. For Alternating Bit Protocol and Go Back N, make sure the route in Network is route1. For Selective Repeat, this should be route2. Make sure json is selected for Serialization as Assignment 3 does not support flatbuffer. The matches are as follows:
 
-Make sure that flatbuffer is correctly installed on machine, then run the following code in the terminal:
-
-$ flatc --python grocery_order.fbs
-
-$ flatc --python health_status.fbs
-
-$ flatc --python response_messages.fbs
-
-This will compile the schemas and create a namespace for the flatbuffer code in a directory called proto. There are subdirectories for each schema protocols within it.
-
-
-# How to run Assignment 1 in mininet:
-Define what serialization you want to use in config.ini as either json or fbufs.
+    For Alternating Bit Protocol:
+        [Network]
+        Route = route1
+        
+        [Transport]
+        TransportProtocol = AlternatingBit
+        
+    For Go Back N:
+        [Network]
+        Route = route1
+        
+        [Transport]
+        TransportProtocol = GoBackN
+    
+    For Selective Repeat:
+        [Network]
+        Route = route2
+        
+        [Transport]
+        TransportProtocol = SelectiveRepeat
+        
 
 Then, there are three mininet tests that we want to run. 
 
