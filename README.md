@@ -77,7 +77,7 @@ $ python3 refrigerator.py -g 10.0.0.5 -s 10.0.0.6
 Open a bash shell and type in the following commands to create 3 hosts and 3 switches
 
 
-$ sudo mn --topo=single,3 --link=tc
+$  sudo mn --topo=linear,6--link=tc
 
 Then type:\
 $ source commands1.txt 
