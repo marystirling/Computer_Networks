@@ -35,21 +35,21 @@ The (Pseudo) Physical Layer supports the actual communication. This can be intra
 # How to run Assignment 3 in mininet:
 Define what transport protocol you want to use in config.ini for Transport as either Alternating Bit Protocol, Go Back N, or Selective Repeat. For Alternating Bit Protocol and Go Back N, make sure the route in Network is route1. For Selective Repeat, this should be route2. Make sure json is selected for Serialization as Assignment 3 does not support flatbuffer. The matches are as follows:
 
-    For Alternating Bit Protocol:
+    # For Alternating Bit Protocol:
         [Network]
         Route = route1
         
         [Transport]
         TransportProtocol = AlternatingBit
         
-    For Go Back N:
+    # For Go Back N:
         [Network]
         Route = route1
         
         [Transport]
         TransportProtocol = GoBackN
     
-    For Selective Repeat:
+    # For Selective Repeat:
         [Network]
         Route = route2
         
