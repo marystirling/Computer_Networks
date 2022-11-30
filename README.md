@@ -70,7 +70,7 @@ $ source commands1.txt
 $ xterm h1
 
 
-For h1, type in that terminal:
+For h1, type in that terminal:\
 $ python3 refrigerator.py -g 10.0.0.5 -s 10.0.0.6
 
 # Mininet Test 2
@@ -85,7 +85,7 @@ $ source commands1.txt
 $ xterm h1
 
 
-For h1, type in that terminal:
+For h1, type in that terminal:\
 $ python3 refrigerator.py -g 10.0.0.5 -s 10.0.0.6
 
 # Mininet Test 3
@@ -99,6 +99,6 @@ $ source commands2.txt
 $ xterm h1
 
 
-For h1, type in that terminal:
+For h1, type in that terminal:\
 $ python3 refrigerator.py -g 10.0.0.19 -s 10.0.0.27
 
