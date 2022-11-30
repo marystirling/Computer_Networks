@@ -36,10 +36,11 @@ def timer(self, choice, socket):
     response = None
     try:
       if choice == 3:
-        time.sleep(1)
+        time.sleep(0.2)
       else:
         response = 1
         response = socket.recv_packet()
+        #response = socket.recv_packet_ack()
     except Exception as e:
       print(e)
     finally:
@@ -166,14 +167,14 @@ class CustomTransportProtocol ():
               break
             chunk = chunked_list[j]
             choice = random.randint(1,3)
-            #choice = 1
             self.send_segment(choice, seq_num, dest_ip, dest_port, chunk, size)
+            #time.sleep(1)
             print(f"sending {chunk} with seq num {seq_num}")
             try:
               with ThreadPoolExecutor(max_workers = window_size) as executor:
                 try:
                   future = executor.submit(timer, self, choice, self.nw_obj)
-                  response = future.result(timeout = 2)
+                  response = future.result(timeout = 0.3)
                   if response is not None:
                     response = int(response)
                   if response == seq_num:
@@ -186,6 +187,7 @@ class CustomTransportProtocol ():
                     print(f"wrong ack: {response}")
                 except Exception as e:
                   print(f"Unknown exception: {e}")
+                
             except Exception as e:
               print(f"Unknown exception {e}")
 
@@ -212,7 +214,7 @@ class CustomTransportProtocol ():
               with ThreadPoolExecutor(max_workers= window_size) as executor:
                 try:
                     future = executor.submit(timer, self, choice, self.nw_obj)
-                    ack = future.result(timeout = 2)
+                    ack = future.result(timeout = 0.3)
                     if ack is not None:
                       acks_recvd.append(int(ack))
                 except Exception as e:
@@ -279,7 +281,7 @@ class CustomTransportProtocol ():
                 with ThreadPoolExecutor(max_workers= window_size) as executor:
                   try:
                       future = executor.submit(timer, self, choice, self.nw_obj)
-                      ack = future.result(timeout = 2)
+                      ack = future.result(timeout = 0.3)
                       if ack is not None:
                         acks_recvd.append(int(ack))
                   except Exception as e:
