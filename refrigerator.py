@@ -24,10 +24,10 @@ import random
 import time
 import netifaces as ni
 
-import numpy as np
+#import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
-import statistics
+#from scipy.stats import norm
+#import statistics
 import seaborn as sns
 
 
