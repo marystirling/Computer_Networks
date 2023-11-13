@@ -21,7 +21,7 @@ from enum import Enum  # for enumerated types
 sys.path.insert (0, "../")
 
 from transportlayer.CustomTransportProtocol import CustomTransportProtocol as XPortProtoObj
-import serialize_flatbuf as sz_fb
+#import serialize_flatbuf as sz_fb
 import serialize_json as sz_json
 
 
@@ -119,12 +119,12 @@ class CustomApplnProtocol ():
               order.__str__()
               
               
-          elif self.ser_type == SerializationType.FBUFS:
-              print ("serialize the message")
+          #elif self.ser_type == SerializationType.FBUFS:
+          #    print ("serialize the message")
 
-              buf = sz_fb.serialize (order)
+          #    buf = sz_fb.serialize (order)
 
-              order.__str__()
+          #    order.__str__()
       else:
           raise BadMessageType
       
@@ -149,12 +149,12 @@ class CustomApplnProtocol ():
 
               status.__str__()
               
-          elif self.ser_type == SerializationType.FBUFS:
-              print ("serialize the message")
+          #elif self.ser_type == SerializationType.FBUFS:
+          #    print ("serialize the message")
 
-              buf = sz_fb.serialize (status)
+          #    buf = sz_fb.serialize (status)
 
-              status.__str__()
+          #    status.__str__()
               
       else:
           raise BadMessageType
@@ -189,13 +189,13 @@ class CustomApplnProtocol ():
               response.__str__()
              
               
-          elif self.ser_type == SerializationType.FBUFS:
-              print ("serialize the message")
+          #elif self.ser_type == SerializationType.FBUFS:
+          #    print ("serialize the message")
 
-              buf = sz_fb.serialize (response)
+          #    buf = sz_fb.serialize (response)
 
              
-              response.__str__()
+          #    response.__str__()
               
       else:
           raise BadMessageType
@@ -258,12 +258,12 @@ class CustomApplnProtocol ():
  
               response.__str__()
               
-      elif self.ser_type == SerializationType.FBUFS:
+      #elif self.ser_type == SerializationType.FBUFS:
               
-              print ("deserialize the message")
-              response_msg = sz_fb.deserialize(response)
+      #        print ("deserialize the message")
+      #        response_msg = sz_fb.deserialize(response)
               
-              response.__str__()
+      #        response.__str__()
              
 
 
